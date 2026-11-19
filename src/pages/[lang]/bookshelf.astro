@@ -27,7 +27,11 @@ const notable = (
 const books = parseBooks(shelf?.body || "", notable?.body || "");
 ---
 
-<Shell title={c.bookshelf}>
+<Shell
+  title={c.bookshelf}
+  description={c.bookshelfDescription}
+  structuredDataType="collection"
+>
   <div class="flex flex-wrap gap-4">
     <label class="flex flex-col gap-2">
       {c.bookSearch}
@@ -70,6 +74,7 @@ const books = parseBooks(shelf?.body || "", notable?.body || "");
         <a
           class="link text-sm"
           href={`/${lang}/search/?q=${encodeURIComponent(book.title.split(" — ")[0])}&evidence=1`}
+          rel="nofollow"
         >
           {c.evidence}
         </a>

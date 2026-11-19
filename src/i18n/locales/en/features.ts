@@ -7,7 +7,11 @@ export const features = {
   search: "Search",
   library: "Reading list",
   bookshelf: "Bookshelf",
+  bookshelfDescription:
+    "Curated library of books on software systems, philosophy, literature, and mental models with personal reading notes and status.",
   series: "Reading paths",
+  seriesDescription:
+    "Structured reading paths connecting essays on web systems architecture, cognitive models, epistemology, and literature.",
   preferences: "Reading preferences",
   size: "Text size",
   spacing: "Line spacing",

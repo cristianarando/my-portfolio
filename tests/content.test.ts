@@ -51,6 +51,38 @@ test("vercel.json CSP enforces strict portfolio-only script-src without unsafe-i
     undefined,
     "vercel.json must not define reverse-proxy rewrites",
   );
+  const cvRule = vercel.headers.find(
+    (h: { source: string }) => h.source === "/cv/(.*)",
+  );
+  assert.ok(cvRule, "CV /cv/(.*) header rule must exist");
+  const robotsHeader = cvRule.headers.find(
+    (h: { key: string; value: string }) => h.key === "X-Robots-Tag",
+  );
+  assert.ok(robotsHeader, "CV X-Robots-Tag header must exist");
+  assert.equal(robotsHeader.value, "noindex, nofollow");
+});
+
+test("getReadingPaths localizes all reading paths across all supported locales", async () => {
+  const { getReadingPaths } = await import("../src/data/series.ts");
+  const enPaths = getReadingPaths("en");
+  assert.equal(enPaths.length, 3);
+  for (const locale of locales) {
+    const localizedPaths = getReadingPaths(locale);
+    assert.equal(localizedPaths.length, enPaths.length);
+    for (let i = 0; i < enPaths.length; i++) {
+      assert.equal(localizedPaths[i].id, enPaths[i].id);
+      assert.ok(localizedPaths[i].title.length > 0);
+      assert.ok(localizedPaths[i].description.length > 20);
+      assert.ok(localizedPaths[i].prerequisites.length > 10);
+      if (locale !== "en") {
+        assert.notEqual(
+          localizedPaths[i].title,
+          enPaths[i].title,
+          `${locale}: reading path "${enPaths[i].id}" title must be translated`,
+        );
+      }
+    }
+  }
 });
 
 test("multiword tags survive serialization without partial matches", () => {

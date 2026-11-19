@@ -428,6 +428,7 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
             {category.items.map((item) => (
               <a
                 href={`/${lang}/search/?q=${encodeURIComponent(item)}&evidence=1`}
+                rel="nofollow"
                 class="badge badge-xs font-mono bg-base-300/60 border border-base-content/10 text-base-content/85 hover:border-base-content/40 hover:text-primary transition-all duration-200 py-2 px-2.5"
               >
                 {item}

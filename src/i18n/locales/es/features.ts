@@ -7,7 +7,11 @@ export const features = {
   search: "Buscar",
   library: "Lista de lectura",
   bookshelf: "Biblioteca",
+  bookshelfDescription:
+    "Biblioteca personal de libros sobre ingeniería de sistemas, filosofía, literatura y modelos mentales con notas y estado de lectura.",
   series: "Rutas de lectura",
+  seriesDescription:
+    "Rutas de lectura estructuradas que conectan ensayos sobre arquitectura de sistemas web, modelos cognitivos, epistemología y literatura.",
   preferences: "Preferencias de lectura",
   size: "Tamaño del texto",
   spacing: "Interlineado",

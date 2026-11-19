@@ -119,13 +119,22 @@ schemas.push({
 
 // 2. WebSite schema (Only on Home)
 if (seo.isHome) {
+  const localizedName = t("home.name");
+  const alternateNames = ["cristianarando.dev", "Cristian Arando Dev"];
+  if (localizedName && localizedName !== SITE.name) {
+    alternateNames.push(localizedName);
+  }
   schemas.push({
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${seo.cleanSiteUrl}/#website`,
-    name: t("home.name") || SITE.name,
-    url: seo.cleanSiteUrl,
+    name: SITE.name,
+    alternateName: alternateNames,
+    url: `${seo.cleanSiteUrl}/`,
     inLanguage: locales,
+    publisher: {
+      "@id": `${seo.cleanSiteUrl}/#person`,
+    },
   });
 }
 
@@ -138,6 +147,7 @@ if (seo.isHome || structuredDataType === "profile") {
       "@type": "Person",
       "@id": `${seo.cleanSiteUrl}/#person`,
       name: SITE.name,
+      alternateName: ["iamcristian", "cristianarando"],
       jobTitle: t("home.subtitle") || SITE.jobTitle,
       url: `${seo.cleanSiteUrl}/${seo.lang}/`,
       email: SITE.email,
@@ -168,7 +178,7 @@ if (
       "@type": "WebSite",
       "@id": `${seo.cleanSiteUrl}/#website`,
       name: SITE.name,
-      url: seo.cleanSiteUrl,
+      url: `${seo.cleanSiteUrl}/`,
     },
   });
 }
@@ -203,10 +213,7 @@ if (type === "article") {
       "@type": "Person",
       "@id": `${seo.cleanSiteUrl}/#person`,
       name: SITE.name,
-      logo: {
-        "@type": "ImageObject",
-        url: `${seo.cleanSiteUrl}/favicon.svg`,
-      },
+      image: new URL(meImage.src, seo.cleanSiteUrl).href,
     },
     mainEntityOfPage: {
       "@type": "WebPage",

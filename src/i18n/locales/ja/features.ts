@@ -7,7 +7,11 @@ export const features = {
   search: "検索",
   library: "リーディングリスト",
   bookshelf: "本棚",
+  bookshelfDescription:
+    "システム工学、哲学、文学、思考モデルに関する蔵書リストと読書ノート・読書状況のアーカイブです。",
   series: "読む順番",
+  seriesDescription:
+    "Webシステム設計、認知アーキテクチャ、認識論、文学に関するエッセイを体系的にたどる読書ガイドです。",
   preferences: "読みやすさの設定",
   size: "文字サイズ",
   spacing: "行間",

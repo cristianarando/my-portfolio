@@ -3,32 +3,34 @@ import Shell from "../../components/FeatureShell.astro";
 import { getLocaleStaticPaths } from "../../config/paths";
 import { getCollection } from "astro:content";
 import { isPublished } from "../../utils/blog";
-import { readingPaths } from "../../data/series";
+import { getReadingPaths } from "../../data/series";
 import { featureCopy } from "../../i18n/features";
 export const getStaticPaths = getLocaleStaticPaths;
 const { lang } = Astro.locals;
 const c = featureCopy(lang);
+const paths = getReadingPaths(lang);
 const posts = await getCollection(
   "blog",
   ({ data }) => data.lang === lang && isPublished(data),
 );
 ---
 
-<Shell title={c.series}>
-  {lang !== "en" && <p>{c.english}</p>}
-  {readingPaths.map((path) => (
+<Shell
+  title={c.series}
+  description={c.seriesDescription}
+  structuredDataType="collection"
+>
+  {paths.map((path) => (
     <section
       id={path.id}
       data-spotlight="true"
       class="card bg-base-200/90 md:bg-base-200/55 md:backdrop-blur-md border border-base-content/10 hover:border-primary/40 transition-all duration-300 p-6 space-y-4 scroll-mt-24 rounded-2xl"
     >
-      <h2 class="text-xl font-bold" lang="en">
-        {path.title}
-      </h2>
-      <p lang="en">{path.description}</p>
+      <h2 class="text-xl font-bold">{path.title}</h2>
+      <p>{path.description}</p>
       <p>
         <strong>{c.prerequisites}: </strong>
-        <span lang="en">{path.prerequisites}</span>
+        <span>{path.prerequisites}</span>
       </p>
       <ol class="list-decimal pl-6 space-y-3">
         {path.slugs

@@ -6,7 +6,7 @@ export const getStaticPaths = getLocaleStaticPaths;
 const c = featureCopy(Astro.locals.lang);
 ---
 
-<Shell title={c.library}>
+<Shell title={c.library} description={c.local} noindex={true}>
   <p>{c.local}</p>
   <button id="reading-clear" class="btn btn-outline">
     {c.clear}

@@ -40,23 +40,27 @@ for (const file of allFiles.filter((file) => file.endsWith(".html"))) {
     );
   }
 }
+const isNoindexRoute = (route) =>
+  route === "/404.html" || /^\/[a-z]{2}\/(search|library)\/$/.test(route);
+
 for (const [route, document] of pages) {
   if (route === "/") continue; // Intentional static-host redirect fallback.
+  const noindex = isNoindexRoute(route);
   assert.equal(document.querySelectorAll("h1").length, 1, `${route}: one h1`);
   assert.ok(
     document.querySelector("main#main-content"),
     `${route}: skip-link target`,
   );
-  assert.ok(
-    document.querySelector('meta[name="description"]')?.content,
-    `${route}: description`,
-  );
+  const descriptionContent = document.querySelector(
+    'meta[name="description"]',
+  )?.content;
+  assert.ok(descriptionContent, `${route}: description`);
   assert.equal(
     document.querySelectorAll('link[rel="canonical"]').length,
-    route === "/404.html" ? 0 : 1,
+    noindex ? 0 : 1,
     `${route}: canonical`,
   );
-  if (route !== "/404.html")
+  if (!noindex)
     assert.equal(
       document.querySelector('link[rel="canonical"]').href,
       origin + route,
@@ -76,14 +80,41 @@ for (const [route, document] of pages) {
     assert.ok(image.hasAttribute("alt"), `${route}: image alt`);
     assert.ok(image.width && image.height, `${route}: image dimensions`);
   }
-  if (route === "/404.html") {
+  for (const searchLink of document.querySelectorAll(
+    'a[href*="/search/?q="]',
+  )) {
+    const rel = searchLink.getAttribute("rel") || "";
+    assert.match(
+      rel,
+      /\bnofollow\b/,
+      `${route}: parameterized search link must include rel="nofollow"`,
+    );
+  }
+  if (noindex) {
     assert.match(
       document.querySelector('meta[name="robots"]').content,
       /noindex/,
+      `${route}: noindex robots meta`,
     );
-    assert.equal(document.querySelectorAll("[hreflang]").length, 0);
+    assert.equal(
+      document.querySelectorAll("link[hreflang]").length,
+      0,
+      `${route}: noindex route must omit link[hreflang]`,
+    );
+    if (route !== "/404.html") {
+      assert.equal(document.documentElement.lang, route.split("/")[1]);
+    }
   } else {
     assert.equal(document.documentElement.lang, route.split("/")[1]);
+    assert.ok(
+      descriptionContent.length >= 25,
+      `${route}: indexable page description must be at least 25 chars (got "${descriptionContent}")`,
+    );
+    assert.equal(
+      document.querySelector('meta[property="og:site_name"]')?.content,
+      "Cristian Arando",
+      `${route}: consistent og:site_name`,
+    );
     const ogImageContent = document.querySelector(
       'meta[property="og:image"]',
     )?.content;
@@ -110,6 +141,26 @@ for (const [route, document] of pages) {
       expectedBreadcrumbCount,
       `${route}: BreadcrumbList depth matches route depth`,
     );
+    if (/^\/[a-z]{2}\/$/.test(route)) {
+      const website = jsonLdObjects.find((obj) => obj["@type"] === "WebSite");
+      assert.ok(website, `${route}: WebSite schema present on home`);
+      assert.equal(website.name, "Cristian Arando", `${route}: WebSite.name`);
+      assert.equal(
+        website.url,
+        `${origin}/`,
+        `${route}: WebSite.url canonical trailing slash`,
+      );
+      assert.ok(
+        Array.isArray(website.alternateName) &&
+          website.alternateName.includes("cristianarando.dev"),
+        `${route}: WebSite.alternateName includes domain`,
+      );
+      assert.equal(
+        website.publisher?.["@id"],
+        `${origin}/#person`,
+        `${route}: WebSite.publisher references Person @id`,
+      );
+    }
     const alternates = [...document.querySelectorAll("link[hreflang]")];
     for (const alternate of alternates) {
       const target = pages.get(new URL(alternate.href).pathname);
@@ -167,8 +218,8 @@ for (const file of allFiles.filter((file) => file.endsWith(".xml"))) {
     for (const loc of document.querySelectorAll("url > loc")) {
       const route = new URL(loc.textContent).pathname;
       assert.ok(
-        route !== "/" && route !== "/404.html",
-        "sitemap excludes redirect/error pages",
+        route !== "/" && !isNoindexRoute(route),
+        `sitemap excludes redirect/noindex pages: ${route}`,
       );
       assert.ok(pages.has(route), `sitemap route exists: ${route}`);
     }

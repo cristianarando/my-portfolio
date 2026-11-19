@@ -13,12 +13,17 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      // Filter out feeds and news sitemaps from the main sitemap
-      filter: (page) =>
-        new URL(page).pathname !== "/" &&
-        !page.includes("/404") &&
-        !page.includes("/rss.xml") &&
-        !page.includes("/news-sitemap"),
+      // Filter out feeds, news sitemaps, and client-only utility routes from the main sitemap
+      filter: (page) => {
+        const { pathname } = new URL(page);
+        return (
+          pathname !== "/" &&
+          !page.includes("/404") &&
+          !page.includes("/rss.xml") &&
+          !page.includes("/news-sitemap") &&
+          !/^\/[a-z]{2}\/(search|library)\/$/.test(pathname)
+        );
+      },
 
       // Customize priority and frequency for each page entry
       serialize: (item) => {

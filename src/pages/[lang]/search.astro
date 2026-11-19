@@ -8,7 +8,7 @@ const { lang } = Astro.locals;
 const c = featureCopy(lang);
 ---
 
-<Shell title={c.search} description={c.query}>
+<Shell title={c.search} description={c.query} noindex={true}>
   <form id="discovery-form" class="space-y-4" role="search">
     <label class="flex flex-col gap-2">
       {c.query}

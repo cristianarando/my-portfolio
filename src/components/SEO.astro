@@ -100,7 +100,7 @@ const alternateUrls = Astro.props.noindex
   .map((l) => (
     <meta property="og:locale:alternate" content={OG_LOCALES[l] || "en_US"} />
   ))}
-<meta property="og:site_name" content={t("home.name") || SITE.name} />
+<meta property="og:site_name" content={SITE.name} />
 
 <!-- Article-specific meta tags for blog posts -->
 {type === "article" && (

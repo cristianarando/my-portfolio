@@ -7,7 +7,11 @@ export const features = {
   search: "Suchen",
   library: "Leseliste",
   bookshelf: "Bücherregal",
+  bookshelfDescription:
+    "Kuratierte Bibliothek zu Systemarchitektur, Philosophie, Literatur und mentalen Modellen mit persönlichen Lesenotizen und Status.",
   series: "Lesepfade",
+  seriesDescription:
+    "Strukturierte Lesepfade durch Essays über Web-Systemarchitektur, kognitive Modelle, Erkenntnistheorie und Literatur.",
   preferences: "Leseeinstellungen",
   size: "Textgröße",
   spacing: "Zeilenabstand",

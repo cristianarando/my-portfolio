@@ -10,6 +10,8 @@ interface Props {
   image?: string | ImageMetadata;
   imageAlt?: string;
   type?: "website" | "article";
+  noindex?: boolean;
+  structuredDataType?: "profile" | "collection";
 }
 
 const {
@@ -18,6 +20,8 @@ const {
   image,
   imageAlt,
   type = "website",
+  noindex,
+  structuredDataType,
 } = Astro.props;
 const { lang } = Astro.locals;
 const c = featureCopy(lang);
@@ -36,6 +40,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, "");
   image={image}
   imageAlt={imageAlt}
   type={type}
+  noindex={noindex}
+  structuredDataType={structuredDataType}
 >
   <Header />
   <main
