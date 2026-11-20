@@ -13,7 +13,7 @@ export const SITE = {
   email: "crisarandosyse@gmail.com",
   url: "https://cristianarando.dev",
   social: {
-    github: "https://github.com/iamcristian",
+    github: "https://github.com/cristianarando",
     linkedin: "https://linkedin.com/in/cristianarando",
     twitter: "@cristianarando",
   },

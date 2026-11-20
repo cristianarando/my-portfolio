@@ -9,7 +9,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![daisyUI](https://img.shields.io/badge/daisyUI-5.7-5A0EF8?style=for-the-badge&logo=daisyui&logoColor=white)](https://daisyui.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![CI](https://img.shields.io/github/actions/workflow/status/iamcristian/my-portfolio/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white)](https://github.com/iamcristian/my-portfolio/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/cristianarando/my-portfolio/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white)](https://github.com/cristianarando/my-portfolio/actions)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](./LICENSE)
 
 <br>
@@ -161,7 +161,7 @@ graph TD
 
 ```bash
 # Clone the repository
-git clone https://github.com/iamcristian/my-portfolio.git
+git clone https://github.com/cristianarando/my-portfolio.git
 cd my-portfolio
 
 # Install dependencies
@@ -380,7 +380,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 - 🌐 Website: [cristianarando.dev](https://cristianarando.dev)
 - 💼 LinkedIn: [linkedin.com/in/cristianarando](https://linkedin.com/in/cristianarando)
-- 🐙 GitHub: [github.com/iamcristian](https://github.com/iamcristian)
+- 🐙 GitHub: [github.com/cristianarando](https://github.com/cristianarando)
 - 📧 Email: crisarandosyse@gmail.com
 
 ---

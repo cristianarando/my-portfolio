@@ -15,7 +15,7 @@ const giscusLangMap: Record<string, string> = {
 const giscusLang = giscusLangMap[lang] || "en";
 
 // Repository and credentials provided by the user
-const repo = "iamcristian/my-portfolio";
+const repo = "cristianarando/my-portfolio";
 const repoId = "R_kgDOS3yNtQ";
 const category = "Announcements";
 const categoryId = "DIC_kwDOS3yNtc4C-918";
@@ -35,10 +35,7 @@ const categoryId = "DIC_kwDOS3yNtc4C-918";
     data-categoryid={categoryId}
     data-lang={giscusLang}
   ></div>
-  <a
-    class="link text-sm"
-    href="https://github.com/iamcristian/my-portfolio/discussions"
-  >
+  <a class="link text-sm" href={`https://github.com/${repo}/discussions`}>
     GitHub Discussions
   </a>
 </div>
