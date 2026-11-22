@@ -212,6 +212,33 @@ export const certifications: CertificationCategory[] = [
     ],
   },
   {
+    id: "leadership-entrepreneurship",
+    name: "リーダーシップ・起業",
+    items: [
+      {
+        id: "udemy-lean-startup",
+        title:
+          "リーンスタートアップ手法によるスタートアップ創出とイノベーション",
+        institution: "Udemy Business",
+        date: "2026年11月",
+        description:
+          "リーンスタートアップ手法に関する14.5時間のコースを修了。スタートアップ創出、イノベーションフレームワーク、MVP検証、顧客開発を習得。",
+        link: "https://drive.google.com/file/d/1n543DKvcXAjXrQBtnXV_hmoYJOENG2Qb/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
+        id: "aspire-leaders-2026",
+        title: "Aspire Leaders Program",
+        institution: "Aspire Institute",
+        date: "2026年7月",
+        description:
+          "2026年Aspire Leaders Programの全モジュール（40時間）を修了。リーダーシップ、クリティカルシンキング、コミュニケーション能力、およびグローバルな社会的インパクト創出スキルを強化。",
+        link: "https://drive.google.com/file/d/199CuddhayXyIj2Bpkx7ZD-cyPyKYW07J/view",
+        logo: "/src/assets/images/certs/aspire.webp",
+      },
+    ],
+  },
+  {
     id: "academic-distinctions",
     name: "学術的表彰",
     items: [

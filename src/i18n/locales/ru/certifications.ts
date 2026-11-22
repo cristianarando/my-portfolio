@@ -212,6 +212,32 @@ export const certifications: CertificationCategory[] = [
     ],
   },
   {
+    id: "leadership-entrepreneurship",
+    name: "Лидерство и предпринимательство",
+    items: [
+      {
+        id: "udemy-lean-startup",
+        title: "Создание стартапов и инновации по методологии Lean Startup",
+        institution: "Udemy Business",
+        date: "Ноябрь 2026",
+        description:
+          "Пройден 14,5-часовой курс по методологии Lean Startup, посвященный созданию стартапов, фреймворкам инноваций, проверке MVP и развитию клиентов.",
+        link: "https://drive.google.com/file/d/1n543DKvcXAjXrQBtnXV_hmoYJOENG2Qb/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
+        id: "aspire-leaders-2026",
+        title: "Программа Aspire Leaders",
+        institution: "Aspire Institute",
+        date: "Июль 2026",
+        description:
+          "Успешно завершены все модули (40 часов обучения) программы Aspire Leaders 2026 с фокусом на лидерство, критическое мышление, коммуникацию и позитивное социальное влияние в глобальном сообществе.",
+        link: "https://drive.google.com/file/d/199CuddhayXyIj2Bpkx7ZD-cyPyKYW07J/view",
+        logo: "/src/assets/images/certs/aspire.webp",
+      },
+    ],
+  },
+  {
     id: "academic-distinctions",
     name: "Академические отличия",
     items: [

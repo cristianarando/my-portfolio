@@ -212,6 +212,33 @@ export const certifications: CertificationCategory[] = [
     ],
   },
   {
+    id: "leadership-entrepreneurship",
+    name: "Liderazgo y Emprendimiento",
+    items: [
+      {
+        id: "udemy-lean-startup",
+        title:
+          "Creación de Startups e Innovación con la Metodología Lean Startup",
+        institution: "Udemy Business",
+        date: "Noviembre 2026",
+        description:
+          "Curso completado de 14.5 horas sobre la metodología Lean Startup, enfocado en la creación de startups, marcos de innovación, validación de MVP y desarrollo de clientes.",
+        link: "https://drive.google.com/file/d/1n543DKvcXAjXrQBtnXV_hmoYJOENG2Qb/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
+        id: "aspire-leaders-2026",
+        title: "Programa Aspire Leaders",
+        institution: "Aspire Institute",
+        date: "Julio 2026",
+        description:
+          "Completados todos los módulos (40 horas de formación) del Aspire Leaders Program 2026, fortaleciendo habilidades de liderazgo, pensamiento crítico, comunicación e impacto social global.",
+        link: "https://drive.google.com/file/d/199CuddhayXyIj2Bpkx7ZD-cyPyKYW07J/view",
+        logo: "/src/assets/images/certs/aspire.webp",
+      },
+    ],
+  },
+  {
     id: "academic-distinctions",
     name: "Distinciones Académicas",
     items: [

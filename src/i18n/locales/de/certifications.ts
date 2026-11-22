@@ -212,6 +212,32 @@ export const certifications: CertificationCategory[] = [
     ],
   },
   {
+    id: "leadership-entrepreneurship",
+    name: "Führung & Unternehmertum",
+    items: [
+      {
+        id: "udemy-lean-startup",
+        title: "Startups gründen und Innovation mit der Lean-Startup-Methodik",
+        institution: "Udemy Business",
+        date: "November 2026",
+        description:
+          "Abschluss eines 14,5-stündigen Kurses zur Lean-Startup-Methodik mit Fokus auf Startup-Gründung, Innovations-Frameworks, MVP-Validierung und Kundenentwicklung.",
+        link: "https://drive.google.com/file/d/1n543DKvcXAjXrQBtnXV_hmoYJOENG2Qb/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
+        id: "aspire-leaders-2026",
+        title: "Aspire Leaders Program",
+        institution: "Aspire Institute",
+        date: "Juli 2026",
+        description:
+          "Abschluss aller Module (40 Kursstunden) des Aspire Leaders Program 2026 zur Stärkung von Führungskompetenz, kritischem Denken, Kommunikation und globaler gesellschaftlicher Wirkung.",
+        link: "https://drive.google.com/file/d/199CuddhayXyIj2Bpkx7ZD-cyPyKYW07J/view",
+        logo: "/src/assets/images/certs/aspire.webp",
+      },
+    ],
+  },
+  {
     id: "academic-distinctions",
     name: "Akademische Auszeichnungen",
     items: [
