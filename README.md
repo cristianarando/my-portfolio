@@ -63,8 +63,6 @@
 - An interactive request journey inside the framework comparison article
 - Passage links and visible article revision notes
 
-See [the feature walkthrough and testing guide](docs/features-testing.md) for routes, expected behavior, content maintenance, and limitations.
-
 ### 🌐 Internationalization (i18n)
 
 - **5 Languages** — English 🇺🇸 · Español 🇪🇸 · Deutsch 🇩🇪 · Русский 🇷🇺 · 日本語 🇯🇵
@@ -173,8 +171,6 @@ pnpm dev
 
 The site will be available at `http://localhost:4321`.
 
-See [the modernization and maintenance guide](docs/modernization.md) for content workflows, security decisions, verification coverage, and follow-up work.
-
 ### Available Commands
 
 | Command                | Action                                                                     |
@@ -202,10 +198,6 @@ my-portfolio/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml             # GitHub Actions CI pipeline
-├── docs/
-│   ├── features-testing.md    # Feature walkthrough and testing guide
-│   ├── modernization.md       # Architecture, security decisions, and maintenance guide
-│   └── remediation-report.md  # Technical audit and remediation verification report
 ├── public/
 │   ├── cv/                    # Localized PDF resumes
 │   ├── favicon.ico
@@ -238,8 +230,7 @@ my-portfolio/
 │   │   ├── ThemeController.astro
 │   │   └── LanguageController.astro
 │   ├── config/
-│   │   ├── site.ts            # Site-wide constants (name, role, email, socials, CV paths)
-│   │   └── paths.ts           # Shared i18n static paths and reserved route segments
+│   │   └── site.ts            # Site-wide constants (name, role, email, socials, CV paths)
 │   ├── content/
 │   │   └── blog/              # MDX blog posts organized by locale (en/, es/, de/, ru/, ja/)
 │   ├── data/
