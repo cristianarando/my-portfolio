@@ -99,4 +99,9 @@ export const features = {
   archFlowContract: "Contrato de frontera (E/S)",
   archFlowInvariant: "Invariante de diseño y salvaguarda",
   archFlowTelemetry: "Telemetría / SLA",
+  topoActiveDomain: "Subsistema activo",
+  topoConnections: "Dominios acoplados",
+  topoVerifiedProjects: "Verificado en proyectos",
+  topoExploreEvidence: "Buscar evidencias",
+  topoAllDomainSkills: "Todas las tecnologías",
 };

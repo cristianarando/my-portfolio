@@ -100,4 +100,9 @@ export const features = {
   archFlowContract: "境界データ契約 (I/O)",
   archFlowInvariant: "設計不変条件・ガード",
   archFlowTelemetry: "テレメトリ / SLA",
+  topoActiveDomain: "選択中のサブシステム",
+  topoConnections: "連携ドメイン",
+  topoVerifiedProjects: "実装プロジェクト",
+  topoExploreEvidence: "実例を検索",
+  topoAllDomainSkills: "ドメイン内の全技術",
 };

@@ -99,4 +99,9 @@ export const features = {
   archFlowContract: "Grenzvertrag (I/O)",
   archFlowInvariant: "Entwurfsinvariante & Schutz",
   archFlowTelemetry: "Telemetrie / SLA",
+  topoActiveDomain: "Aktives Subsystem",
+  topoConnections: "Gekoppelte Domänen",
+  topoVerifiedProjects: "In Projekten eingesetzt",
+  topoExploreEvidence: "Belege suchen",
+  topoAllDomainSkills: "Alle Technologien",
 };

@@ -96,4 +96,9 @@ export const features = {
   archFlowContract: "Контракт границы (I/O)",
   archFlowInvariant: "Инвариант и защита",
   archFlowTelemetry: "Телеметрия / SLA",
+  topoActiveDomain: "Активная подсистема",
+  topoConnections: "Связанные домены",
+  topoVerifiedProjects: "Применено в проектах",
+  topoExploreEvidence: "Искать примеры",
+  topoAllDomainSkills: "Все технологии домена",
 };
