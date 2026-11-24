@@ -52,8 +52,8 @@ export const home = {
   "experience.technologies": "Технологии",
   "skills.title": "Навыки",
   "skills.subtitle": "// Навыки",
-  "skills.viewGrid": "Сетка категорий",
-  "skills.viewTopology": "Топология систем",
+  "skills.viewGrid": "Категории",
+  "skills.viewTopology": "Граф",
   "skills.topologyHint":
     "Интерактивный граф архитектуры. Наведите курсор на узлы, чтобы увидеть взаимосвязи и зависимости.",
   "projects.title": "Проекты",

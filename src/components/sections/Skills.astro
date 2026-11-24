@@ -388,7 +388,7 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
 
           {/* Real Unique Astronomical Constellation SVG in Card Backdrop */}
           <svg
-            class="absolute top-2 right-2 w-36 h-20 text-base-content pointer-events-none select-none overflow-visible opacity-30 group-hover:opacity-85 transition-opacity duration-500"
+            class="absolute top-3 right-3 w-32 h-18 text-base-content pointer-events-none select-none overflow-visible opacity-50 group-hover:opacity-95 transition-opacity duration-500"
             viewBox="0 0 140 80"
             fill="none"
             aria-hidden="true"
@@ -437,44 +437,37 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
           </svg>
 
           <div>
-            {/* Card Header with Icon, Name, and Constellation Badge */}
-            <div class="flex items-start justify-between gap-3 mb-4 relative z-10">
-              <div class="flex items-start gap-3.5">
-                <div class="p-3 bg-base-300/80 border border-base-content/10 text-primary rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300 shadow-xs">
-                  <SkillIcon name={category.icon} class="w-6 h-6" />
-                </div>
-                <div class="space-y-1">
-                  <h3 class="font-bold text-sm md:text-base text-base-content leading-tight group-hover:text-primary transition-colors duration-300">
-                    {category.name}
-                  </h3>
-                  {category.description && (
-                    <p class="text-xs text-base-content/80 leading-normal font-medium">
-                      {category.description}
-                    </p>
-                  )}
-                </div>
+            {/* Card Header with Icon & Name (right space reserved for unobstructed constellation) */}
+            <div class="flex items-start gap-3.5 pr-28 mb-4 relative z-10">
+              <div class="p-3 bg-base-300/80 border border-base-content/10 text-primary rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300 shadow-xs">
+                <SkillIcon name={category.icon} class="w-6 h-6" />
               </div>
-
-              {/* Constellation Badge */}
-              <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-base-300/60 border border-base-content/10 text-[10px] font-mono text-base-content/75 shrink-0 group-hover:border-primary/40 transition-colors">
-                <span class="text-primary text-[10px] leading-none">✦</span>
-                <span class="font-bold tracking-wider">
-                  {constellation.latin}
-                </span>
+              <div class="space-y-1 min-w-0">
+                <h3 class="font-bold text-sm md:text-base text-base-content leading-tight group-hover:text-primary transition-colors duration-300">
+                  {category.name}
+                </h3>
+                {category.description && (
+                  <p class="text-xs text-base-content/80 leading-normal font-medium">
+                    {category.description}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* Authentic Astronomical Lore Connector Bar */}
+            {/* Single Unified Astronomical Constellation Reference Bar */}
             <div
-              class="my-3 pt-2.5 border-t border-base-content/10 flex items-center justify-between gap-2 text-[11px] font-mono text-base-content/85 relative z-10 cursor-help"
-              title={`${constellation.latin} (★ ${constellation.alpha}): ${constellation.history[lang] || constellation.history.en}`}
+              class="my-3 pt-2.5 border-t border-base-content/10 flex items-center gap-2 text-[11px] font-mono text-base-content/85 relative z-10 cursor-help"
+              title={`${constellation.latin}: ${constellation.history[lang] || constellation.history.en}`}
             >
-              <span class="truncate text-base-content/85">
-                <span class="text-base-content/70">//</span>{" "}
-                {constellation.meaning[lang] || constellation.meaning.en}
+              <span class="text-primary text-[10px] leading-none shrink-0">
+                ✦
               </span>
-              <span class="text-[10px] text-base-content/85 shrink-0 font-medium">
-                ★ {constellation.alpha}
+              <span class="font-bold tracking-wider text-base-content/90 shrink-0">
+                {constellation.latin}
+              </span>
+              <span class="text-base-content/40 shrink-0">·</span>
+              <span class="truncate text-base-content/75">
+                {constellation.meaning[lang] || constellation.meaning.en}
               </span>
             </div>
           </div>
@@ -496,17 +489,13 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
     })}
   </div>
 
-  <!-- Interactive Systems Topology View -->
+  <!-- Interactive Graph View -->
   <div
     id="skills-topology-panel"
     data-skills-panel="topology"
     hidden
     class="space-y-6"
   >
-    <p class="text-xs md:text-sm font-mono text-base-content/75 border-l-2 border-primary/50 pl-3">
-      {t("skills.topologyHint")}
-    </p>
-
     <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-6 items-stretch">
       <!-- Left: Orbital Systems Graph (SVG) + Compact Quick Pills -->
       <div class="rounded-2xl border border-base-content/12 bg-base-200/60 md:bg-base-200/45 md:backdrop-blur-md p-4 md:p-5 space-y-4 flex flex-col justify-between">
