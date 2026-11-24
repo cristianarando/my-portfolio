@@ -88,4 +88,15 @@ export const features = {
   kbdNavigate: "Navegar",
   kbdSelect: "Seleccionar",
   kbdClose: "Cerrar",
+  archFlowTitle: "Traza interactiva del sistema",
+  archFlowSubtitle:
+    "Selecciona un escenario de ejecución o inspecciona cualquier nodo para trazar contratos, telemetría y salvaguardas entre fronteras.",
+  archFlowScenarioLabel: "Escenario",
+  archFlowPlay: "Auto-trazar",
+  archFlowPause: "Pausar traza",
+  archFlowStep: "Siguiente salto",
+  archFlowReset: "Reiniciar",
+  archFlowContract: "Contrato de frontera (E/S)",
+  archFlowInvariant: "Invariante de diseño y salvaguarda",
+  archFlowTelemetry: "Telemetría / SLA",
 };

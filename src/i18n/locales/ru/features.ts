@@ -85,4 +85,15 @@ export const features = {
   kbdNavigate: "Навигация",
   kbdSelect: "Выбрать",
   kbdClose: "Закрыть",
+  archFlowTitle: "Интерактивная трассировка системы",
+  archFlowSubtitle:
+    "Выберите сценарий выполнения или узел, чтобы отследить контракты данных, телеметрию и защитные инварианты между слоями.",
+  archFlowScenarioLabel: "Сценарий",
+  archFlowPlay: "Авто-трассировка",
+  archFlowPause: "Пауза",
+  archFlowStep: "Следующий узел",
+  archFlowReset: "Сброс",
+  archFlowContract: "Контракт границы (I/O)",
+  archFlowInvariant: "Инвариант и защита",
+  archFlowTelemetry: "Телеметрия / SLA",
 };

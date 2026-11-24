@@ -87,4 +87,15 @@ export const features = {
   kbdNavigate: "Navigate",
   kbdSelect: "Select",
   kbdClose: "Close",
+  archFlowTitle: "Interactive system trace",
+  archFlowSubtitle:
+    "Select a runtime scenario or inspect any node to trace contracts, telemetry, and failure guards across boundaries.",
+  archFlowScenarioLabel: "Scenario",
+  archFlowPlay: "Auto-trace",
+  archFlowPause: "Pause trace",
+  archFlowStep: "Next hop",
+  archFlowReset: "Reset",
+  archFlowContract: "Boundary contract (I/O)",
+  archFlowInvariant: "Design invariant & guard",
+  archFlowTelemetry: "Telemetry / SLA",
 };

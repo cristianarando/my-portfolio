@@ -88,4 +88,15 @@ export const features = {
   kbdNavigate: "Navigieren",
   kbdSelect: "Auswählen",
   kbdClose: "Schließen",
+  archFlowTitle: "Interaktiver System-Trace",
+  archFlowSubtitle:
+    "Wählen Sie ein Laufzeitszenario oder inspizieren Sie einen Knoten, um Schnittstellenverträge, Telemetrie und Schutzmechanismen nachzuverfolgen.",
+  archFlowScenarioLabel: "Szenario",
+  archFlowPlay: "Auto-Trace",
+  archFlowPause: "Trace pausieren",
+  archFlowStep: "Nächster Schritt",
+  archFlowReset: "Zurücksetzen",
+  archFlowContract: "Grenzvertrag (I/O)",
+  archFlowInvariant: "Entwurfsinvariante & Schutz",
+  archFlowTelemetry: "Telemetrie / SLA",
 };

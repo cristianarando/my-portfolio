@@ -89,4 +89,15 @@ export const features = {
   kbdNavigate: "移動",
   kbdSelect: "選択",
   kbdClose: "閉じる",
+  archFlowTitle: "インタラクティブ・システムトレース",
+  archFlowSubtitle:
+    "実行シナリオを選択するか各ノードをクリックして、境界間のデータ契約・テレメトリ・安全不変条件を追跡できます。",
+  archFlowScenarioLabel: "シナリオ",
+  archFlowPlay: "自動トレース",
+  archFlowPause: "一時停止",
+  archFlowStep: "次のホップ",
+  archFlowReset: "リセット",
+  archFlowContract: "境界データ契約 (I/O)",
+  archFlowInvariant: "設計不変条件・ガード",
+  archFlowTelemetry: "テレメトリ / SLA",
 };
