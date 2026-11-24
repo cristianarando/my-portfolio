@@ -1,5 +1,6 @@
 ---
 import { useTranslations } from "../../i18n/utils";
+import { featureCopy } from "../../i18n/features";
 
 interface Props {
   class?: string;
@@ -8,6 +9,7 @@ interface Props {
 const { class: className } = Astro.props;
 const { lang } = Astro.locals;
 const t = useTranslations(lang);
+const c = featureCopy(lang);
 ---
 
 <div class={className} id="lagrange-container">
@@ -31,21 +33,39 @@ const t = useTranslations(lang);
     ></div>
 
     <!-- Header -->
-    <div class="flex justify-between items-center border-b border-base-content/10 pb-4 z-10">
-      <span class="font-mono text-xs tracking-widest uppercase opacity-70">
+    <div class="flex justify-between items-center border-b border-base-content/10 pb-3.5 z-10 gap-2">
+      <span class="font-mono text-xs tracking-widest uppercase opacity-70 truncate">
         {t("lagrange.equilibrium")}
       </span>
-      <div class="flex items-center gap-1.5">
-        <span class="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span>
-        <span class="font-mono text-xs text-success tracking-wider uppercase">
-          {t("lagrange.active")}
-        </span>
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          data-lagrange-reset
+          title={c.lagrangeResetProbe}
+          aria-label={c.lagrangeResetProbe}
+          class="btn btn-ghost btn-xs px-1.5 min-h-0 h-5 font-mono text-[10px] border border-base-content/15 hover:border-primary/40 opacity-75 hover:opacity-100"
+        >
+          ↺
+        </button>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-success animate-ping"></span>
+          <span class="font-mono text-xs text-success tracking-wider uppercase">
+            {t("lagrange.active")}
+          </span>
+        </div>
       </div>
     </div>
 
-    <!-- Constellation SVG (Lagrange Points) -->
-    <div class="relative grow flex items-center justify-center py-3 z-10 svg-container">
-      <svg class="w-56 h-56 text-primary" viewBox="0 0 200 200" fill="none">
+    <!-- Constellation SVG (Lagrange Points & Live RK4 Orbital Field) -->
+    <div class="relative grow flex flex-col items-center justify-center py-2 z-10 svg-container">
+      <svg
+        data-lagrange-svg
+        class="w-52 h-52 text-primary cursor-crosshair"
+        viewBox="0 0 200 200"
+        fill="none"
+        role="group"
+        aria-label={c.lagrangeHint}
+      >
         <defs>
           <!-- Sun Glow Gradient -->
           <radialGradient id="sun-glow" cx="50%" cy="50%" r="50%">
@@ -332,6 +352,45 @@ const t = useTranslations(lang);
           stroke-width="0.75"
           class="line-element line-L3 opacity-20"
         />
+
+        <!-- CR3BP RK4 Test-Particle Orbital Layer -->
+        <g class="pointer-events-none" data-lagrange-orbit-layer>
+          <polyline
+            data-lagrange-trail
+            fill="none"
+            stroke="currentColor"
+            stroke-width="0.95"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="opacity-70"
+            points=""
+          />
+          <line
+            data-lagrange-velocity
+            x1="125"
+            y1="57"
+            x2="128"
+            y2="57"
+            stroke="currentColor"
+            stroke-width="0.65"
+            class="opacity-55"
+          />
+          <circle
+            data-lagrange-probe-glow
+            cx="125"
+            cy="57"
+            r="4.2"
+            fill="currentColor"
+            class="opacity-25"
+          />
+          <circle
+            data-lagrange-probe
+            cx="125"
+            cy="57"
+            r="1.9"
+            fill="currentColor"
+          />
+        </g>
 
         <!-- Lagrange Point Nodes (Crosshair Reticles with Gravitational Ripple Waves) -->
         <!-- L1: PRECISION (130, 100) -->
@@ -715,6 +774,9 @@ const t = useTranslations(lang);
           L5
         </text>
       </svg>
+      <p class="font-mono text-[10px] text-base-content/55 text-center leading-tight px-2 mt-1 select-none">
+        {c.lagrangeHint}
+      </p>
     </div>
 
     <!-- Interactive Microcopy Area -->
@@ -732,14 +794,18 @@ const t = useTranslations(lang);
       </span>
     </div>
 
-    <!-- Footer -->
-    <div class="pt-4 flex justify-between items-center z-10 font-mono text-xs opacity-80 tracking-wider text-base-content">
+    <!-- Footer Telemetry HUD -->
+    <div class="pt-3 flex justify-between items-center z-10 font-mono text-[11px] opacity-85 tracking-wider text-base-content gap-2">
       <div class="flex flex-col text-left">
         <span>{t("lagrange.status")}</span>
-        <span>{t("lagrange.drift")}</span>
+        <span class="text-primary">
+          {c.lagrangeJacobi}: <span data-lagrange-jacobi>3.000</span>
+        </span>
       </div>
       <div class="flex flex-col text-right">
-        <span>{t("lagrange.integrity")}</span>
+        <span data-lagrange-regime class="text-primary font-semibold">
+          RK4 · L4_TROJAN
+        </span>
         <span>{t("lagrange.version")}</span>
       </div>
     </div>
@@ -880,108 +946,22 @@ const t = useTranslations(lang);
       transform: rotate(360deg);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svg-container svg,
+    :global(.corona-pulse),
+    :global(.moon-orbit-group),
+    :global(.force-wave) {
+      animation: none !important;
+    }
+  }
 </style>
 
 <script>
   import { onPageLoad } from "../../scripts/page-lifecycle";
+  import { initLagrangeSimulation } from "../../scripts/lagrange-physics";
 
   onPageLoad((signal) => {
-    const card = document.getElementById("lagrange-container");
-    if (!card) return;
-
-    const lagrangeNodes = Array.from(
-      card.querySelectorAll<HTMLElement>(".lagrange-node"),
-    );
-    const statusTitle = card.querySelector<HTMLElement>(".system-status-title");
-    const statusDesc = card.querySelector<HTMLElement>(".system-status-desc");
-
-    const colorMap: Record<string, string> = {
-      L1: "#3b82f6", // blue
-      L2: "#10b981", // emerald
-      L3: "#f59e0b", // amber
-      L4: "#8b5cf6", // violet
-      L5: "#ec4899", // pink
-    };
-
-    const activateNode = (node: Element) => {
-      const id = node.getAttribute("data-id");
-      const title = node.getAttribute("data-title");
-      const desc = node.getAttribute("data-desc");
-      if (!id) return;
-
-      card.style.setProperty("--active-color", colorMap[id] || "currentColor");
-
-      if (title && desc && statusTitle && statusDesc) {
-        statusTitle.textContent = title;
-        statusDesc.textContent = desc;
-        statusTitle.style.color = "var(--active-color)";
-      }
-
-      lagrangeNodes.forEach((otherNode) => {
-        if (otherNode === node) {
-          otherNode.classList.remove("node-inactive");
-        } else {
-          otherNode.classList.add("node-inactive");
-        }
-      });
-
-      card.querySelectorAll(".text-node-label").forEach((lbl) => {
-        const isMatch = lbl.getAttribute("data-id") === id;
-        lbl.classList.toggle("opacity-100", isMatch);
-        lbl.classList.toggle("opacity-0", !isMatch);
-      });
-
-      card.querySelectorAll(".line-element").forEach((line) => {
-        const isMatch = line.classList.contains(`line-${id}`);
-        line.classList.toggle("line-active", isMatch);
-        line.classList.toggle("line-inactive", !isMatch);
-      });
-
-      card.querySelectorAll(".contour-element").forEach((contour) => {
-        const isMatch = contour.classList.contains(`contour-${id}`);
-        contour.classList.toggle("contour-active", isMatch);
-        contour.classList.toggle("contour-inactive", !isMatch);
-      });
-    };
-
-    const resetAll = () => {
-      card.style.removeProperty("--active-color");
-
-      if (statusTitle && statusDesc) {
-        const lagrangeCard = card.querySelector(".lagrange-card");
-        const defaultTitle =
-          lagrangeCard?.getAttribute("data-default-title") || "SYSTEM_ORBIT";
-        const defaultDesc =
-          lagrangeCard?.getAttribute("data-default-desc") ||
-          "Hover vectors to inspect Lagrange engine metrics";
-        statusTitle.textContent = defaultTitle;
-        statusDesc.textContent = defaultDesc;
-        statusTitle.style.color = "";
-      }
-
-      lagrangeNodes.forEach((otherNode) => {
-        otherNode.classList.remove("node-inactive");
-      });
-
-      card.querySelectorAll(".text-node-label").forEach((lbl) => {
-        lbl.classList.remove("opacity-100");
-        lbl.classList.add("opacity-0");
-      });
-
-      card.querySelectorAll(".line-element").forEach((line) => {
-        line.classList.remove("line-active", "line-inactive");
-      });
-
-      card.querySelectorAll(".contour-element").forEach((contour) => {
-        contour.classList.remove("contour-active", "contour-inactive");
-      });
-    };
-
-    lagrangeNodes.forEach((node) => {
-      node.addEventListener("mouseenter", () => activateNode(node), { signal });
-      node.addEventListener("focus", () => activateNode(node), { signal });
-      node.addEventListener("mouseleave", resetAll, { signal });
-      node.addEventListener("blur", resetAll, { signal });
-    });
+    initLagrangeSimulation(signal);
   });
 </script>
