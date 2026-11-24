@@ -156,3 +156,92 @@ test("filters, views, pagination, DOM order and cleanup work together", async ()
     }
   }
 });
+
+test("list manager triggers FLIP Web Animations on visible cards when motion is enabled", () => {
+  const dom = new JSDOM(
+    `<!doctype html><html lang="en"><body>
+    <input id="search"><select id="sort"><option value="date-desc">Newest</option><option value="date-asc">Oldest</option></select>
+    <button class="filter" data-tag="all">All</button><button class="filter" data-tag="ai">AI</button>
+    <button id="grid">Grid</button><button id="list">List</button>
+    <div id="cards" class="grid">
+      <article class="card" data-name="alpha" data-date="2025-01-01" data-tags='["ai"]'></article>
+      <article class="card" data-name="beta" data-date="2025-02-01" data-tags='["web"]'></article>
+    </div><div id="empty" class="hidden">No results</div><nav id="pages"></nav><p id="list-status"></p>
+  </body></html>`,
+    { url: "https://example.test/en/blog/" },
+  );
+  const { window } = dom;
+  const original = new Map();
+  for (const key of [
+    "window",
+    "document",
+    "location",
+    "history",
+    "matchMedia",
+  ]) {
+    original.set(key, Object.getOwnPropertyDescriptor(globalThis, key));
+    Object.defineProperty(globalThis, key, {
+      configurable: true,
+      value: key === "matchMedia" ? () => ({ matches: false }) : window[key],
+    });
+  }
+  const controller = new window.AbortController();
+  let animateCalls = 0;
+  let rectStep = 0;
+  for (const card of window.document.querySelectorAll(".card")) {
+    card.animate = () => {
+      animateCalls++;
+      return {};
+    };
+    card.getBoundingClientRect = () => ({
+      left: rectStep++ * 120,
+      top: 40,
+      width: 300,
+      height: 200,
+      right: 300,
+      bottom: 240,
+      x: 0,
+      y: 40,
+      toJSON() {},
+    });
+  }
+  const config = {
+    containerId: "cards",
+    cardSelector: ".card",
+    searchInputId: "search",
+    sortSelectId: "sort",
+    filterBtnSelector: ".filter",
+    filterAttr: "data-tags",
+    gridBtnId: "grid",
+    listBtnId: "list",
+    noResultsId: "empty",
+    paginationId: "pages",
+    itemsPerPage: 10,
+    figureSelector: "figure",
+    bodySelector: ".body",
+    footerSelector: "footer",
+  };
+  for (const view of ["grid", "list"])
+    for (const part of ["Container", "Card", "Figure", "Body", "Footer"])
+      config[`${view}${part}Class`] = part === "Card" ? `card ${view}` : view;
+  try {
+    initListManager(config, controller.signal);
+    assert.equal(
+      animateCalls,
+      0,
+      "initial render must not animate synchronously before user interaction",
+    );
+    window.document.querySelector("[data-tag='ai']").click();
+    assert.ok(
+      animateCalls > 0,
+      "filtering with non-zero rects and motion enabled triggers FLIP animation",
+    );
+  } finally {
+    controller.abort();
+    dom.window.close();
+    for (const [key, descriptor] of original) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+      else delete globalThis[key];
+    }
+  }
+});

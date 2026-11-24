@@ -170,6 +170,83 @@ export function initListManager(
 
   if (!container || !paginationControls) return;
 
+  let initialized = false;
+
+  function captureLayoutState() {
+    const prevRects = new Map<HTMLElement, DOMRect>();
+    const previouslyVisible = new Set<HTMLElement>();
+    if (!initialized || typeof window === "undefined") {
+      return { prevRects, previouslyVisible };
+    }
+    for (const card of allCards) {
+      if (!card.hidden) {
+        previouslyVisible.add(card);
+        prevRects.set(card, card.getBoundingClientRect());
+      }
+    }
+    return { prevRects, previouslyVisible };
+  }
+
+  function animateLayoutChange(
+    cards: HTMLElement[],
+    prevRects: Map<HTMLElement, DOMRect>,
+    previouslyVisible: Set<HTMLElement>,
+  ) {
+    if (
+      typeof window === "undefined" ||
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches
+    ) {
+      return;
+    }
+
+    for (const card of cards) {
+      if (card.hidden || typeof card.animate !== "function") continue;
+      const nextRect = card.getBoundingClientRect();
+      if (nextRect.width === 0 && nextRect.height === 0) continue;
+
+      const prevRect = prevRects.get(card);
+      if (
+        previouslyVisible.has(card) &&
+        prevRect &&
+        (prevRect.width > 0 || prevRect.height > 0)
+      ) {
+        const dx = prevRect.left - nextRect.left;
+        const dy = prevRect.top - nextRect.top;
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+          card.animate(
+            [
+              {
+                transform: `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`,
+              },
+              { transform: "translate3d(0, 0, 0)" },
+            ],
+            {
+              duration: 300,
+              easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            },
+          );
+        }
+      } else {
+        card.animate(
+          [
+            {
+              opacity: 0,
+              transform: "translate3d(0, 10px, 0) scale(0.98)",
+            },
+            {
+              opacity: 1,
+              transform: "translate3d(0, 0, 0) scale(1)",
+            },
+          ],
+          {
+            duration: 260,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          },
+        );
+      }
+    }
+  }
+
   function syncUrlState() {
     const url = new URL(location.href);
     if (searchQuery) url.searchParams.set("q", searchQuery);
@@ -192,6 +269,7 @@ export function initListManager(
   // ── View Toggle ──
   function updateViewLayout() {
     if (!container || !gridBtn || !listBtn) return;
+    const { prevRects, previouslyVisible } = captureLayoutState();
     gridBtn.setAttribute("aria-pressed", String(currentView === "grid"));
     listBtn.setAttribute("aria-pressed", String(currentView === "list"));
 
@@ -240,6 +318,9 @@ export function initListManager(
         );
       });
     }
+    if (initialized) {
+      animateLayoutChange(allCards, prevRects, previouslyVisible);
+    }
   }
 
   function updateDateValidationUI(inverted: boolean) {
@@ -258,6 +339,8 @@ export function initListManager(
 
   function processItems() {
     if (!container || !noResults || !paginationControls) return;
+
+    const { prevRects, previouslyVisible } = captureLayoutState();
 
     const inverted = isInvertedDateRange(
       currentDateRange,
@@ -307,6 +390,10 @@ export function initListManager(
         : orderedCards.length
           ? `${orderedCards.length} ${status.dataset.label || "results"}`
           : noResults.textContent;
+    }
+
+    if (initialized) {
+      animateLayoutChange(allCards, prevRects, previouslyVisible);
     }
   }
 
@@ -468,4 +555,5 @@ export function initListManager(
   );
   updateViewLayout();
   processItems();
+  initialized = true;
 }

@@ -12,6 +12,7 @@ interface Props {
   post: CollectionEntry<"blog">;
   isFeatured?: boolean;
   showFeaturedBadge?: boolean;
+  disableTransitions?: boolean;
   loading?: "lazy" | "eager";
   class?: string;
   [key: `data-${string}`]: string | undefined;
@@ -23,6 +24,7 @@ const {
   post,
   isFeatured = false,
   showFeaturedBadge = false,
+  disableTransitions = false,
   loading = "lazy",
   class: className,
   ...rest
@@ -60,7 +62,12 @@ const t = useTranslations(lang);
       <circle cx="110" cy="18" r="1.8" fill="currentColor"></circle>
     </svg>
 
-    <div class="w-full md:w-5/12 overflow-hidden rounded-xl bg-base-300 relative min-h-50 shrink-0">
+    <div
+      class="w-full md:w-5/12 overflow-hidden rounded-xl bg-base-300 relative min-h-50 shrink-0"
+      transition:name={
+        disableTransitions ? undefined : `blog-image-${post.data.slug}`
+      }
+    >
       <Image
         src={post.data.image}
         alt={post.data.imageAlt || post.data.title}
@@ -95,7 +102,12 @@ const t = useTranslations(lang);
             </span>
           </span>
         </div>
-        <Heading class="card-title text-base md:text-lg font-bold">
+        <Heading
+          class="card-title text-base md:text-lg font-bold"
+          transition:name={
+            disableTransitions ? undefined : `blog-title-${post.data.slug}`
+          }
+        >
           <a
             href={getRelativeLocaleUrl(lang, `blog/${post.data.slug}`)}
             class="hover:text-primary transition-colors"
@@ -158,7 +170,12 @@ const t = useTranslations(lang);
       <circle cx="72" cy="40" r="1.4" fill="currentColor"></circle>
     </svg>
 
-    <figure class="blog-figure relative h-44 bg-base-300 shrink-0 transition-all overflow-hidden">
+    <figure
+      class="blog-figure relative h-44 bg-base-300 shrink-0 transition-all overflow-hidden"
+      transition:name={
+        disableTransitions ? undefined : `blog-image-${post.data.slug}`
+      }
+    >
       <Image
         src={post.data.image}
         alt={post.data.imageAlt || post.data.title}
@@ -201,7 +218,12 @@ const t = useTranslations(lang);
             </span>
           </span>
         </div>
-        <Heading class="card-title text-sm font-bold leading-snug">
+        <Heading
+          class="card-title text-sm font-bold leading-snug"
+          transition:name={
+            disableTransitions ? undefined : `blog-title-${post.data.slug}`
+          }
+        >
           <a
             href={getRelativeLocaleUrl(lang, `blog/${post.data.slug}`)}
             class="hover:text-primary transition-colors blog-title"

@@ -78,7 +78,10 @@ const localImage = imageImport ? imageImport() : fallbackImage;
     <circle cx="80" cy="26" r="1.5" fill="currentColor"></circle>
   </svg>
 
-  <figure class="project-figure relative h-48 bg-base-300 shrink-0 transition-all overflow-hidden">
+  <figure
+    class="project-figure relative h-48 bg-base-300 shrink-0 transition-all overflow-hidden"
+    transition:name={`project-image-${project.id}`}
+  >
     {isExternal ? (
       <Image
         src={project.image}
@@ -118,7 +121,10 @@ const localImage = imageImport ? imageImport() : fallbackImage;
             <span>{t("blog.featured")}</span>
           </span>
         )}
-        <Heading class="card-title text-sm md:text-base hover:text-primary transition-colors project-title">
+        <Heading
+          class="card-title text-sm md:text-base hover:text-primary transition-colors project-title"
+          transition:name={`project-title-${project.id}`}
+        >
           <a href={`/${lang}/projects/${project.id}/`}>{project.title}</a>
         </Heading>
       </div>
