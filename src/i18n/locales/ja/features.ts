@@ -78,4 +78,15 @@ export const features = {
     "ユーザーインターフェース → アプリケーション境界 → データサービス → レスポンス → 画面更新。各レイヤー境界でバリデーション、エラーハンドリング、認可制御を実施します。",
   caseStudyValidateText:
     "リンク先のプロジェクトリポジトリで実際のデータモデル、テスト、デプロイ構成、アクセス制御を確認できます。パフォーマンス指標は実測値に基づいて検証されるべきです。",
+  commandPalette: "コマンドパレット",
+  commandPlaceholder:
+    "コマンドを入力、または記事・プロジェクト・スキルを検索...",
+  quickActions: "クイックアクション",
+  switchTheme: "テーマを切り替え",
+  viewCv: "履歴書を表示 (PDF)",
+  copyEmail: "メールアドレスをコピー",
+  openSearchPage: "検索ページを開く",
+  kbdNavigate: "移動",
+  kbdSelect: "選択",
+  kbdClose: "閉じる",
 };

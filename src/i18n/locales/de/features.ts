@@ -77,4 +77,15 @@ export const features = {
     "Benutzeroberfläche → Anwendungsgrenze → Datendienst → Antwort → Oberflächenaktualisierung. An jeder Grenze sind Validierung, Fehlerbehandlung und Zugriffsberechtigungen zu beachten.",
   caseStudyValidateText:
     "Im verlinkten Repository finden sich das Datenmodell, automatisierte Tests, Deployment-Konfigurationen und Zugriffskontrollen. Leistungsdaten sollten stets durch Messungen untermauert werden.",
+  commandPalette: "Befehlspalette",
+  commandPlaceholder:
+    "Befehl eingeben oder Artikel, Projekte, Fähigkeiten suchen...",
+  quickActions: "Schnellaktionen",
+  switchTheme: "Thema wechseln",
+  viewCv: "Lebenslauf ansehen (PDF)",
+  copyEmail: "E-Mail-Adresse kopieren",
+  openSearchPage: "Vollständige Suchseite öffnen",
+  kbdNavigate: "Navigieren",
+  kbdSelect: "Auswählen",
+  kbdClose: "Schließen",
 };

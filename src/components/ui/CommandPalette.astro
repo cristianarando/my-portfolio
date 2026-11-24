@@ -1,0 +1,488 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations } from "../../i18n/utils";
+import { featureCopy } from "../../i18n/features";
+import { SITE } from "../../config/site";
+import SearchIcon from "../../assets/icons/search.svg";
+
+const { lang } = Astro.locals;
+const t = useTranslations(lang);
+const c = featureCopy(lang);
+const homeUrl = getRelativeLocaleUrl(lang, "");
+const cvUrl = SITE.cv[lang] || SITE.cv.en;
+---
+
+<dialog
+  id="cmd-palette-modal"
+  class="modal items-start pt-14 sm:pt-24 bg-black/55 backdrop-blur-xs"
+  aria-label={c.commandPalette}
+  data-lang={lang}
+  data-email={SITE.email}
+  data-cv={cvUrl}
+  data-copied={c.copied}
+  data-empty={c.empty}
+  data-quick-actions={c.quickActions}
+  data-articles={c.articles}
+  data-projects={c.projects}
+  data-experience={c.experience}
+  data-skills={t("nav.skills")}
+  data-home-url={homeUrl}
+  data-projects-url={getRelativeLocaleUrl(lang, "projects")}
+  data-blog-url={getRelativeLocaleUrl(lang, "blog")}
+  data-library-url={getRelativeLocaleUrl(lang, "library")}
+  data-series-url={getRelativeLocaleUrl(lang, "series")}
+  data-bookshelf-url={getRelativeLocaleUrl(lang, "bookshelf")}
+  data-uses-url={getRelativeLocaleUrl(lang, "uses")}
+  data-search-url={getRelativeLocaleUrl(lang, "search")}
+  data-nav-home={t("nav.home")}
+  data-nav-projects={t("nav.projects")}
+  data-nav-blog={t("nav.blog")}
+  data-nav-uses={t("nav.uses")}
+  data-nav-library={c.library}
+  data-nav-series={c.series}
+  data-nav-bookshelf={c.bookshelf}
+  data-act-cv={c.viewCv}
+  data-act-email={c.copyEmail}
+  data-act-theme={c.switchTheme}
+  data-act-search={c.openSearchPage}
+>
+  <div
+    id="cmd-palette-box"
+    class="modal-box max-w-xl w-[calc(100%-2rem)] p-0 rounded-2xl bg-base-100/95 backdrop-blur-xl border border-base-content/15 shadow-2xl overflow-hidden"
+  >
+    <!-- Search Input Bar -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-base-content/10">
+      <SearchIcon class="size-4 opacity-60 shrink-0" aria-hidden="true" />
+      <input
+        id="cmd-palette-input"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder={c.commandPlaceholder}
+        aria-label={c.commandPlaceholder}
+        aria-controls="cmd-palette-list"
+        aria-autocomplete="list"
+        class="w-full bg-transparent text-sm text-base-content placeholder:text-base-content/45 focus:outline-none"
+      />
+      <form method="dialog" class="shrink-0">
+        <button
+          id="cmd-palette-close"
+          type="submit"
+          class="btn btn-ghost btn-xs font-mono opacity-70 hover:opacity-100"
+          aria-label={c.kbdClose}
+        >
+          Esc
+        </button>
+      </form>
+    </div>
+
+    <!-- Live Status (Accessible + Feedback Toast for Copy/Theme) -->
+    <p
+      id="cmd-palette-status"
+      role="status"
+      aria-live="polite"
+      class="px-4 pt-2 text-[11px] font-mono text-base-content/60 empty:hidden"
+    ></p>
+
+    <!-- Results & Quick Actions -->
+    <ul
+      id="cmd-palette-list"
+      role="listbox"
+      aria-label={c.commandPalette}
+      class="max-h-[58vh] overflow-y-auto p-2 space-y-1"
+    ></ul>
+
+    <!-- Keyboard Shortcut Legend -->
+    <div class="hidden sm:flex items-center justify-between px-4 py-2 border-t border-base-content/10 bg-base-200/40 text-[11px] font-mono text-base-content/60">
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center gap-1.5">
+          <kbd class="kbd kbd-xs">↑</kbd>
+          <kbd class="kbd kbd-xs">↓</kbd>
+          <span>{c.kbdNavigate}</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <kbd class="kbd kbd-xs">↵</kbd>
+          <span>{c.kbdSelect}</span>
+        </span>
+      </div>
+      <span class="inline-flex items-center gap-1.5">
+        <kbd class="kbd kbd-xs">Esc</kbd>
+        <span>{c.kbdClose}</span>
+      </span>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button aria-label={c.kbdClose}>{c.kbdClose}</button>
+  </form>
+</dialog>
+
+<script>
+  import { navigate } from "astro:transitions/client";
+  import { onPageLoad } from "../../scripts/page-lifecycle";
+  import {
+    normalizeText,
+    tokenizeQuery,
+    validateSearchEntries,
+    type ValidatedSearchEntry,
+  } from "../../utils/list";
+
+  interface PaletteItem {
+    id: string;
+    title: string;
+    badge: string;
+    subtitle?: string;
+    run: () => void;
+  }
+
+  const THEMES = ["light", "business", "sunset", "aurora", "cyberslate"];
+  let cachedEntries: ValidatedSearchEntry[] | null = null;
+  let fetchPromise: Promise<ValidatedSearchEntry[]> | null = null;
+
+  async function loadSearchIndex(): Promise<ValidatedSearchEntry[]> {
+    if (cachedEntries) return cachedEntries;
+    if (!fetchPromise) {
+      fetchPromise = fetch("/search-index.json")
+        .then((res) => {
+          if (!res.ok) throw new Error(String(res.status));
+          return res.json();
+        })
+        .then((data: unknown) => {
+          cachedEntries = validateSearchEntries(data);
+          return cachedEntries;
+        })
+        .catch(() => {
+          fetchPromise = null;
+          return [];
+        });
+    }
+    return fetchPromise;
+  }
+
+  onPageLoad((signal) => {
+    const modal = document.getElementById(
+      "cmd-palette-modal",
+    ) as HTMLDialogElement | null;
+    const input = document.getElementById(
+      "cmd-palette-input",
+    ) as HTMLInputElement | null;
+    const list = document.getElementById("cmd-palette-list");
+    const status = document.getElementById("cmd-palette-status");
+    if (!modal || !input || !list || !status) return;
+
+    const d = modal.dataset;
+    const lang = d.lang || "en";
+    let entries: ValidatedSearchEntry[] = cachedEntries || [];
+    let visibleItems: PaletteItem[] = [];
+    let activeIndex = 0;
+
+    const closeAndNavigate = (url: string, external = false) => {
+      if (modal.open) modal.close();
+      if (external) {
+        window.open(url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      if (url.includes("#")) {
+        window.location.assign(url);
+        return;
+      }
+      navigate(url);
+    };
+
+    const cycleTheme = () => {
+      const current = document.documentElement.dataset.theme || "business";
+      const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* Theme still applies without storage. */
+      }
+      document
+        .querySelectorAll<HTMLButtonElement>("[data-set-theme]")
+        .forEach((btn) => {
+          const active = btn.dataset.setTheme === next;
+          btn.setAttribute("aria-pressed", String(active));
+          btn.querySelector("svg")?.classList.toggle("visible", active);
+        });
+      status.textContent = `${d.actTheme || "Theme"}: ${next}`;
+    };
+
+    const copyEmail = async () => {
+      const email = d.email || "";
+      try {
+        await navigator.clipboard.writeText(email);
+        status.textContent = `${d.copied || "Copied"}: ${email}`;
+      } catch {
+        window.location.href = `mailto:${email}`;
+      }
+    };
+
+    const quickLabel = d.quickActions || "Quick actions";
+    const quickActions: PaletteItem[] = [
+      {
+        id: "act-projects",
+        title: d.navProjects || "Projects",
+        badge: quickLabel,
+        subtitle: d.projectsUrl,
+        run: () => closeAndNavigate(d.projectsUrl || `/${lang}/projects/`),
+      },
+      {
+        id: "act-blog",
+        title: d.navBlog || "Blog",
+        badge: quickLabel,
+        subtitle: d.blogUrl,
+        run: () => closeAndNavigate(d.blogUrl || `/${lang}/blog/`),
+      },
+      {
+        id: "act-cv",
+        title: d.actCv || "View CV (PDF)",
+        badge: quickLabel,
+        subtitle: d.cv,
+        run: () => closeAndNavigate(d.cv || "/cv/cv_en.pdf", true),
+      },
+      {
+        id: "act-theme",
+        title: d.actTheme || "Switch theme",
+        badge: quickLabel,
+        subtitle: "Light · Business · Sunset · Aurora · Cyberslate",
+        run: cycleTheme,
+      },
+      {
+        id: "act-email",
+        title: d.actEmail || "Copy email address",
+        badge: quickLabel,
+        subtitle: d.email,
+        run: () => {
+          void copyEmail();
+        },
+      },
+      {
+        id: "act-series",
+        title: d.navSeries || "Reading paths",
+        badge: quickLabel,
+        run: () => closeAndNavigate(d.seriesUrl || `/${lang}/series/`),
+      },
+      {
+        id: "act-bookshelf",
+        title: d.navBookshelf || "Bookshelf",
+        badge: quickLabel,
+        run: () => closeAndNavigate(d.bookshelfUrl || `/${lang}/bookshelf/`),
+      },
+      {
+        id: "act-library",
+        title: d.navLibrary || "Reading list",
+        badge: quickLabel,
+        run: () => closeAndNavigate(d.libraryUrl || `/${lang}/library/`),
+      },
+      {
+        id: "act-uses",
+        title: d.navUses || "Uses",
+        badge: quickLabel,
+        run: () => closeAndNavigate(d.usesUrl || `/${lang}/uses/`),
+      },
+      {
+        id: "act-home",
+        title: d.navHome || "Home",
+        badge: quickLabel,
+        run: () => closeAndNavigate(d.homeUrl || `/${lang}/`),
+      },
+    ];
+
+    const kindLabel = (kind: string) => d[kind] || kind;
+
+    const scoreEntry = (
+      entry: ValidatedSearchEntry,
+      qNorm: string,
+      words: string[],
+    ) => {
+      const titleNorm = normalizeText(entry.title);
+      const textNorm = normalizeText(entry.text);
+      let score = 0;
+      if (titleNorm === qNorm) score += 100;
+      else if (titleNorm.startsWith(qNorm)) score += 60;
+      else if (titleNorm.includes(qNorm)) score += 40;
+      for (const w of words) {
+        if (titleNorm.includes(w)) score += 20;
+        if (textNorm.includes(w)) score += 5;
+      }
+      return score;
+    };
+
+    const updateSelection = (nextIndex: number) => {
+      if (visibleItems.length === 0) {
+        activeIndex = 0;
+        return;
+      }
+      activeIndex = (nextIndex + visibleItems.length) % visibleItems.length;
+      const children =
+        list.querySelectorAll<HTMLButtonElement>("[role='option']");
+      children.forEach((btn, idx) => {
+        const selected = idx === activeIndex;
+        btn.setAttribute("aria-selected", String(selected));
+        btn.classList.toggle("bg-base-200", selected);
+        btn.classList.toggle("border-primary/40", selected);
+        btn.classList.toggle("border-transparent", !selected);
+        if (selected) btn.scrollIntoView({ block: "nearest" });
+      });
+    };
+
+    const renderList = () => {
+      const raw = input.value.trim();
+      const qNorm = normalizeText(raw);
+      const words = tokenizeQuery(raw);
+
+      if (words.length === 0) {
+        visibleItems = quickActions;
+        status.textContent = "";
+      } else {
+        const matchingActions = quickActions.filter((item) => {
+          const hay = normalizeText(`${item.title} ${item.subtitle || ""}`);
+          return words.every((w) => hay.includes(w));
+        });
+
+        const matchingEntries = entries
+          .filter(
+            (e) =>
+              e.lang === lang &&
+              words.every((w) =>
+                normalizeText(`${e.title} ${e.text}`).includes(w),
+              ),
+          )
+          .sort(
+            (a, b) => scoreEntry(b, qNorm, words) - scoreEntry(a, qNorm, words),
+          )
+          .slice(0, 14)
+          .map<PaletteItem>((entry, i) => ({
+            id: `entry-${i}-${entry.url}`,
+            title: entry.title,
+            badge: kindLabel(entry.kind),
+            subtitle: entry.text.slice(0, 95),
+            run: () => closeAndNavigate(entry.url),
+          }));
+
+        const fallbackSearch: PaletteItem = {
+          id: "act-full-search",
+          title: `${d.actSearch || "Open full search"}: "${raw}"`,
+          badge: quickLabel,
+          run: () =>
+            closeAndNavigate(
+              `${d.searchUrl || `/${lang}/search/`}?q=${encodeURIComponent(raw)}`,
+            ),
+        };
+
+        visibleItems = [...matchingEntries, ...matchingActions, fallbackSearch];
+        status.textContent =
+          matchingEntries.length === 0 && matchingActions.length === 0
+            ? d.empty || "No results yet."
+            : "";
+      }
+
+      list.replaceChildren();
+      activeIndex = 0;
+
+      visibleItems.forEach((item, idx) => {
+        const li = document.createElement("li");
+        li.setAttribute("role", "presentation");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.setAttribute("role", "option");
+        btn.setAttribute("aria-selected", String(idx === 0));
+        btn.className = `w-full text-left px-3 py-2.5 rounded-xl border transition-colors flex items-center justify-between gap-3 cursor-pointer ${
+          idx === 0
+            ? "bg-base-200 border-primary/40"
+            : "border-transparent hover:bg-base-200/70"
+        }`;
+
+        const textWrap = document.createElement("div");
+        textWrap.className = "min-w-0 flex-1";
+        const titleEl = document.createElement("div");
+        titleEl.className = "text-sm font-medium text-base-content truncate";
+        titleEl.textContent = item.title;
+        textWrap.append(titleEl);
+
+        if (item.subtitle) {
+          const subEl = document.createElement("div");
+          subEl.className = "text-xs text-base-content/55 truncate mt-0.5";
+          subEl.textContent = item.subtitle;
+          textWrap.append(subEl);
+        }
+
+        const badge = document.createElement("span");
+        badge.className =
+          "badge badge-xs font-mono bg-base-300/70 border border-base-content/10 text-base-content/75 shrink-0 py-2 px-2";
+        badge.textContent = item.badge;
+
+        btn.append(textWrap, badge);
+        btn.addEventListener("mouseenter", () => updateSelection(idx), {
+          signal,
+        });
+        btn.addEventListener("click", () => item.run(), { signal });
+        li.append(btn);
+        list.append(li);
+      });
+    };
+
+    const openPalette = async () => {
+      if (modal.open) {
+        modal.close();
+        return;
+      }
+      input.value = "";
+      renderList();
+      modal.showModal();
+      input.focus();
+      if (entries.length === 0) {
+        entries = await loadSearchIndex();
+        if (!signal.aborted && modal.open) renderList();
+      }
+    };
+
+    input.addEventListener("input", renderList, { signal });
+    input.addEventListener(
+      "keydown",
+      (e) => {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          updateSelection(activeIndex + 1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          updateSelection(activeIndex - 1);
+        } else if (e.key === "Enter") {
+          if (visibleItems[activeIndex]) {
+            e.preventDefault();
+            visibleItems[activeIndex].run();
+          }
+        }
+      },
+      { signal },
+    );
+
+    window.addEventListener("open-command-palette", openPalette, { signal });
+
+    document
+      .querySelectorAll<HTMLElement>("[data-cmd-open]")
+      .forEach((trigger) => {
+        trigger.addEventListener(
+          "click",
+          (e) => {
+            if (
+              e.ctrlKey ||
+              e.metaKey ||
+              e.shiftKey ||
+              e.altKey ||
+              (e as MouseEvent).button !== 0
+            ) {
+              return;
+            }
+            e.preventDefault();
+            void openPalette();
+          },
+          { signal },
+        );
+      });
+
+    return () => {
+      if (modal.open) modal.close();
+    };
+  });
+</script>

@@ -77,4 +77,15 @@ export const features = {
     "Interfaz → límite de aplicación → servicio de datos → respuesta → actualización de interfaz. En cada frontera se debe validar, gestionar errores y verificar permisos de acceso.",
   caseStudyValidateText:
     "Inspecciona el repositorio enlazado para examinar el modelo de datos real, las pruebas, la configuración de despliegue y los controles de acceso. Las métricas de rendimiento deben incorporarse siempre respaldadas por mediciones.",
+  commandPalette: "Paleta de comandos",
+  commandPlaceholder:
+    "Escribe un comando o busca artículos, proyectos, habilidades...",
+  quickActions: "Acciones rápidas",
+  switchTheme: "Cambiar tema",
+  viewCv: "Ver CV (PDF)",
+  copyEmail: "Copiar correo electrónico",
+  openSearchPage: "Abrir página de búsqueda completa",
+  kbdNavigate: "Navegar",
+  kbdSelect: "Seleccionar",
+  kbdClose: "Cerrar",
 };

@@ -77,4 +77,14 @@ export const features = {
     "Interface → application boundary → data service → response → interface update. At each boundary, consider validation, error handling, and who is allowed to perform the operation.",
   caseStudyValidateText:
     "Inspect the linked repository for the actual data model, tests, deployment configuration, and access controls. Performance and user outcomes should be added only when supported by measurements.",
+  commandPalette: "Command palette",
+  commandPlaceholder: "Type a command or search articles, projects, skills...",
+  quickActions: "Quick actions",
+  switchTheme: "Switch theme",
+  viewCv: "View CV (PDF)",
+  copyEmail: "Copy email address",
+  openSearchPage: "Open full search page",
+  kbdNavigate: "Navigate",
+  kbdSelect: "Select",
+  kbdClose: "Close",
 };

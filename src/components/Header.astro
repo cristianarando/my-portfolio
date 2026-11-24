@@ -79,12 +79,19 @@ const NAV_LINKS = [
     <div class="navbar-end items-center gap-1">
       <a
         href={getRelativeLocaleUrl(lang, "search")}
+        data-cmd-open="true"
         class="btn btn-ghost btn-sm h-10 gap-1.5"
         aria-label={c.search}
         aria-keyshortcuts="Control+k Meta+k"
       >
         <SearchIcon class="block size-4 shrink-0" aria-hidden="true" />
         <span class="hidden xl:inline">{c.search}</span>
+        <kbd
+          class="hidden md:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono bg-base-300/70 border border-base-content/15 rounded opacity-75"
+          aria-hidden="true"
+        >
+          ⌘K
+        </kbd>
       </a>
       <LanguageController />
       <ThemeController />

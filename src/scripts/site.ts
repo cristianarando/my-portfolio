@@ -171,9 +171,13 @@ onPageLoad((signal) => {
         )
           return;
         event.preventDefault();
-        window.location.assign(
-          "/" + document.documentElement.lang + "/search/",
-        );
+        if (document.getElementById("cmd-palette-modal")) {
+          window.dispatchEvent(new CustomEvent("open-command-palette"));
+        } else {
+          window.location.assign(
+            "/" + document.documentElement.lang + "/search/",
+          );
+        }
       }
     },
     { signal },
