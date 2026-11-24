@@ -103,4 +103,8 @@ export const features = {
   topoVerifiedProjects: "Verified in projects",
   topoExploreEvidence: "Search evidence",
   topoAllDomainSkills: "All domain skills",
+  lagrangeHint:
+    "Click L1–L5 or anywhere in the orbital field to inject an RK4 test probe",
+  lagrangeResetProbe: "Reset orbit",
+  lagrangeJacobi: "JACOBI C_J",
 };

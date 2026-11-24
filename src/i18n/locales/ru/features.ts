@@ -101,4 +101,8 @@ export const features = {
   topoVerifiedProjects: "Применено в проектах",
   topoExploreEvidence: "Искать примеры",
   topoAllDomainSkills: "Все технологии домена",
+  lagrangeHint:
+    "Нажмите L1–L5 или любую точку орбиты для запуска тестового зонда РК4",
+  lagrangeResetProbe: "Сбросить орбиту",
+  lagrangeJacobi: "ЯКОБИ C_J",
 };

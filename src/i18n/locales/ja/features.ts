@@ -105,4 +105,8 @@ export const features = {
   topoVerifiedProjects: "実装プロジェクト",
   topoExploreEvidence: "実例を検索",
   topoAllDomainSkills: "ドメイン内の全技術",
+  lagrangeHint:
+    "L1〜L5または軌道フィールド内をクリックしてRK4テスト探査機を投入",
+  lagrangeResetProbe: "軌道をリセット",
+  lagrangeJacobi: "ヤコビ積分 C_J",
 };

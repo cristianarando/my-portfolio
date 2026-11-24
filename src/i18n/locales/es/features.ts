@@ -104,4 +104,8 @@ export const features = {
   topoVerifiedProjects: "Verificado en proyectos",
   topoExploreEvidence: "Buscar evidencias",
   topoAllDomainSkills: "Todas las tecnologías",
+  lagrangeHint:
+    "Haz clic en L1–L5 o en cualquier punto del campo orbital para lanzar una sonda RK4",
+  lagrangeResetProbe: "Reiniciar órbita",
+  lagrangeJacobi: "JACOBI C_J",
 };
