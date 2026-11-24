@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { JSDOM } from "jsdom";
 import {
   computeJacobiConstant,
+  createInjectedProbe,
   createPresetOrbit,
   precomputeOrbitTrail,
   setupLagrangeSimulation,
@@ -44,6 +45,33 @@ test("CR3BP RK4 solver conserves Jacobi integral and preserves synodic-SVG coord
   // Precompute trail length
   const { svgTrail } = precomputeOrbitTrail(createPresetOrbit("L4"), 50, 0.01);
   assert.equal(svgTrail.length, 51);
+
+  // Outer-field injected circular probe stays bound in viewport & conserves Jacobi integral
+  for (const [clickX, clickY] of [
+    [15, 100],
+    [185, 100],
+    [100, 15],
+    [152, 96],
+  ]) {
+    const initial = createInjectedProbe(clickX, clickY);
+    const c0 = computeJacobiConstant(initial);
+    const { finalState, svgTrail: customTrail } = precomputeOrbitTrail(
+      initial,
+      240,
+      0.01,
+    );
+    const c1 = computeJacobiConstant(finalState);
+    assert.ok(
+      Math.abs(c1 - c0) < 1e-4,
+      `injected probe (${clickX}, ${clickY}) conserves Jacobi integral`,
+    );
+    for (const pt of customTrail) {
+      assert.ok(
+        pt.x >= -15 && pt.x <= 215 && pt.y >= -15 && pt.y <= 215,
+        `injected probe (${clickX}, ${clickY}) remains bound near orbital viewport`,
+      );
+    }
+  }
 });
 
 test("setupLagrangeSimulation initializes L4 orbit, switches regimes, injects custom SVG probes, and resets", () => {
@@ -146,7 +174,7 @@ test("setupLagrangeSimulation initializes L4 orbit, switches regimes, injects cu
     const l2Trail = $("[data-lagrange-trail]").getAttribute("points");
     assert.notEqual(l2Trail, initialTrail);
 
-    // 3. Clicking empty orbital space injects a custom RK4 test probe
+    // 3. Clicking empty orbital space injects a custom RK4 test probe at the exact click point
     svg.dispatchEvent(
       new dom.window.MouseEvent("click", {
         bubbles: true,
@@ -157,6 +185,12 @@ test("setupLagrangeSimulation initializes L4 orbit, switches regimes, injects cu
     assert.equal(
       $("[data-lagrange-regime]").textContent.trim(),
       "RK4 · TEST_PROBE",
+    );
+    assert.equal($("[data-lagrange-probe]").getAttribute("cx"), "60.00");
+    assert.equal($("[data-lagrange-probe]").getAttribute("cy"), "75.00");
+    assert.equal(
+      $("[data-lagrange-trail]").getAttribute("points"),
+      "60.0,75.0",
     );
     assert.equal(
       $(".system-status-title").textContent.trim(),

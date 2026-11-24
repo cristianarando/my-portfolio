@@ -205,7 +205,7 @@ export function createPresetOrbit(
 }
 
 /**
- * Convert a user click in SVG space into a gentle rotating-frame test probe state.
+ * Convert a user click in SVG space into a bound rotating-frame circular Keplerian orbit probe.
  */
 export function createInjectedProbe(
   svgX: number,
@@ -215,15 +215,30 @@ export function createInjectedProbe(
   const clampedX = Math.max(12, Math.min(188, svgX));
   const clampedY = Math.max(12, Math.min(188, svgY));
   const { x, y } = svgToSynodic(clampedX, clampedY, mu);
-  const dx = x + mu;
-  const r = Math.max(0.18, Math.hypot(dx, y));
-  // Prograde rotating-frame tangential nudge proportional to local Keplerian delta
-  const speed = Math.min(0.45, Math.sqrt(1 / r) - r);
+
+  const dx2 = x - (1 - mu);
+  const r2 = Math.hypot(dx2, y);
+  if (r2 < 0.16) {
+    // Capture into a bound prograde satellite orbit around M2 (Earth)
+    const r2Soft = Math.max(0.06, r2);
+    const vc2 = Math.sqrt(mu / r2Soft);
+    return {
+      x,
+      y,
+      vx: (-y / r2Soft) * vc2 + y,
+      vy: (dx2 / r2Soft) * vc2 - dx2,
+    };
+  }
+
+  // Exact bound circular Keplerian velocity around M1 transformed to synodic frame: v_rot = v_inert - (omega x r)
+  const dx1 = x + mu;
+  const r1 = Math.max(0.18, Math.hypot(dx1, y));
+  const vc1 = Math.sqrt((1 - mu) / r1);
   return {
     x,
     y,
-    vx: (-y / r) * speed * 0.35,
-    vy: (dx / r) * speed * 0.35,
+    vx: (-y / r1) * vc1 + y,
+    vy: (dx1 / r1) * vc1 - x,
   };
 }
 
@@ -387,9 +402,15 @@ export function setupLagrangeSimulation(
     regime: LagrangePointId | "CUSTOM",
   ) => {
     lockedPoint = regime;
-    const precomputed = precomputeOrbitTrail(initial, INITIAL_TRAIL_STEPS);
-    currentState = precomputed.finalState;
-    svgTrail = precomputed.svgTrail;
+    if (regime === "CUSTOM") {
+      // Launch directly from the clicked point without skipping ahead
+      currentState = { ...initial };
+      svgTrail = [synodicToSvg(initial.x, initial.y)];
+    } else {
+      const precomputed = precomputeOrbitTrail(initial, INITIAL_TRAIL_STEPS);
+      currentState = precomputed.finalState;
+      svgTrail = precomputed.svgTrail;
+    }
     renderProbeAndHud();
   };
 
@@ -497,10 +518,37 @@ export function setupLagrangeSimulation(
     (event) => {
       const target = event.target as Element | null;
       if (target?.closest(".lagrange-node")) return;
-      const rect = svg.getBoundingClientRect();
-      if (!rect || rect.width <= 0 || rect.height <= 0) return;
-      const svgX = ((event.clientX - rect.left) / rect.width) * 200;
-      const svgY = ((event.clientY - rect.top) / rect.height) * 200;
+
+      let svgX: number | null = null;
+      let svgY: number | null = null;
+
+      if (
+        typeof svg.createSVGPoint === "function" &&
+        typeof svg.getScreenCTM === "function"
+      ) {
+        const ctm = svg.getScreenCTM();
+        if (ctm) {
+          const pt = svg.createSVGPoint();
+          pt.x = event.clientX;
+          pt.y = event.clientY;
+          const localPt = pt.matrixTransform(ctm.inverse());
+          svgX = localPt.x;
+          svgY = localPt.y;
+        }
+      }
+
+      if (
+        svgX === null ||
+        svgY === null ||
+        Number.isNaN(svgX) ||
+        Number.isNaN(svgY)
+      ) {
+        const rect = svg.getBoundingClientRect();
+        if (!rect || rect.width <= 0 || rect.height <= 0) return;
+        svgX = ((event.clientX - rect.left) / rect.width) * 200;
+        svgY = ((event.clientY - rect.top) / rect.height) * 200;
+      }
+
       setActiveHighlight(null);
       loadOrbit(createInjectedProbe(svgX, svgY), "CUSTOM");
     },
