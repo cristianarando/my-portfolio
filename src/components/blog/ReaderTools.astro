@@ -22,11 +22,11 @@ const { title } = Astro.props;
     id="reader-resume"
     class="hidden flex flex-wrap items-center gap-2 p-3 my-4 rounded-xl bg-base-200 border border-base-300"
   >
-    <button id="reader-continue" class="btn btn-sm btn-primary">
+    <button id="reader-continue" class="btn btn-xs md:btn-sm btn-primary">
       {c.resume}
     </button>
-    <span id="reader-section" class="text-sm"></span>
-    <button id="reader-dismiss" class="btn btn-sm btn-ghost">
+    <span id="reader-section" class="text-xs md:text-sm"></span>
+    <button id="reader-dismiss" class="btn btn-xs md:btn-sm btn-ghost">
       {c.dismiss}
     </button>
   </div>
@@ -221,13 +221,18 @@ const { title } = Astro.props;
 </script>
 <style is:global>
   article.reader-article {
-    font-size: var(--reader-size, 0.875rem);
+    font-size: var(--reader-size, 0.75rem);
     line-height: var(--reader-leading, 1.8);
     max-width: var(--reader-width, 85ch);
     width: 100%;
     margin-inline: auto;
     overflow-wrap: anywhere;
     min-width: 0;
+  }
+  @media (min-width: 768px) {
+    article.reader-article {
+      font-size: var(--reader-size, 0.875rem);
+    }
   }
   article.reader-article :where(p, li, blockquote) {
     font-size: inherit;

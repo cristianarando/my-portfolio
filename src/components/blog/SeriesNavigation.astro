@@ -22,20 +22,29 @@ const index = ordered.findIndex((p) => p.data.slug === slug);
 
 {path && (
   <section
-    class="my-8 card bg-base-200 border border-base-300 p-5 gap-3"
+    class="my-8 rounded-2xl bg-base-200/80 border border-base-content/10 p-4 md:p-5 space-y-2.5"
     aria-label={c.series}
   >
-    <a class="link font-semibold" href={`/${lang}/series/#${path.id}`}>
+    <a
+      class="inline-block font-mono text-xs font-semibold uppercase tracking-wider text-primary hover:underline"
+      href={`/${lang}/series/#${path.id}`}
+    >
       {c.series} · {index + 1}/{ordered.length}
     </a>
-    <div class="flex flex-wrap justify-between gap-4">
+    <div class="flex flex-wrap justify-between gap-3 text-xs md:text-sm">
       {ordered[index - 1] && (
-        <a class="link" href={`/${lang}/blog/${ordered[index - 1].data.slug}/`}>
+        <a
+          class="font-medium text-base-content/85 hover:text-primary transition-colors"
+          href={`/${lang}/blog/${ordered[index - 1].data.slug}/`}
+        >
           ← {c.previous}: {ordered[index - 1].data.title}
         </a>
       )}
       {ordered[index + 1] && (
-        <a class="link" href={`/${lang}/blog/${ordered[index + 1].data.slug}/`}>
+        <a
+          class="font-medium text-base-content/85 hover:text-primary transition-colors"
+          href={`/${lang}/blog/${ordered[index + 1].data.slug}/`}
+        >
           {c.next}: {ordered[index + 1].data.title} →
         </a>
       )}

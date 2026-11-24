@@ -7,10 +7,12 @@ const c = featureCopy(Astro.locals.lang);
   class="request-lab not-prose border-y border-base-content/15 py-5 my-10"
   aria-label={c.lab}
 >
-  <summary class="cursor-pointer text-base font-semibold py-2">{c.lab}</summary>
+  <summary class="cursor-pointer text-xs md:text-sm font-semibold py-2">
+    {c.lab}
+  </summary>
   <div class="space-y-5 pt-4">
-    <p class="text-sm opacity-70">{c.labNote}</p>
-    <label class="flex flex-col gap-2">
+    <p class="text-xs opacity-70">{c.labNote}</p>
+    <label class="flex flex-col gap-2 text-xs md:text-sm">
       {c.payload}
       <input
         class="range range-primary lab-payload"
@@ -24,7 +26,7 @@ const c = featureCopy(Astro.locals.lang);
     <ol class="grid grid-cols-2 sm:grid-cols-4 gap-2" lang="en">
       {["Browser", "API", "Database", "Response"].map((stage, i) => (
         <li
-          class="lab-stage rounded-lg border border-base-300 p-3 text-sm"
+          class="lab-stage rounded-lg border border-base-300 p-3 text-xs"
           data-stage={i}
         >
           <span class="text-xs opacity-60 block mb-1">0{i + 1}</span>
@@ -33,15 +35,19 @@ const c = featureCopy(Astro.locals.lang);
       ))}
     </ol>
     <p
-      class="lab-output font-mono text-lg border-l-2 border-primary pl-3"
+      class="lab-output font-mono text-sm md:text-base border-l-2 border-primary pl-3"
       role="status"
       aria-live="polite"
     ></p>
     <div class="flex gap-2">
-      <button class="lab-next btn btn-primary btn-sm">{c.step}</button>
-      <button class="lab-reset btn btn-outline btn-sm">{c.restart}</button>
+      <button class="lab-next btn btn-primary btn-xs md:btn-sm">
+        {c.step}
+      </button>
+      <button class="lab-reset btn btn-outline btn-xs md:btn-sm">
+        {c.restart}
+      </button>
     </div>
-    <p lang="en" class="text-sm">
+    <p lang="en" class="text-xs md:text-sm opacity-80">
       Assumptions: a 1 MB/s transfer rate, 40 ms of network latency, and 20 ms
       of server work. Increasing the payload changes the transfer cost; it does
       not change the assumed server cost. Follow the highlighted step to see

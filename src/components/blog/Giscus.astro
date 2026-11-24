@@ -22,7 +22,7 @@ const categoryId = "DIC_kwDOS3yNtc4C-918";
 ---
 
 <div class="giscus-wrapper mt-12 pt-8 border-t border-base-300">
-  <h2 class="text-xl font-bold mb-6 text-base-content/90">
+  <h2 class="text-base md:text-lg font-bold mb-4 text-base-content/90">
     {t("blog.comments")}
   </h2>
 
@@ -35,8 +35,11 @@ const categoryId = "DIC_kwDOS3yNtc4C-918";
     data-categoryid={categoryId}
     data-lang={giscusLang}
   ></div>
-  <a class="link text-sm" href={`https://github.com/${repo}/discussions`}>
-    GitHub Discussions
+  <a
+    class="text-xs md:text-sm text-base-content/75 hover:text-primary transition-colors"
+    href={`https://github.com/${repo}/discussions`}
+  >
+    GitHub Discussions ↗
   </a>
 </div>
 

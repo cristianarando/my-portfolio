@@ -122,7 +122,11 @@ onPageLoad((signal) => {
     ]),
   );
   const apply = () => {
-    article.style.setProperty("--reader-size", `${p.size / 16}rem`);
+    if (p.size === defaults.size) {
+      article.style.removeProperty("--reader-size");
+    } else {
+      article.style.setProperty("--reader-size", `${p.size / 16}rem`);
+    }
     article.style.setProperty(
       "--reader-leading",
       p.spacing === "relaxed" ? "2.1" : "1.8",

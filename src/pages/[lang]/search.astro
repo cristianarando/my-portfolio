@@ -10,15 +10,20 @@ const c = featureCopy(lang);
 
 <Shell title={c.search} description={c.query} noindex={true}>
   <form id="discovery-form" class="space-y-4" role="search">
-    <label class="flex flex-col gap-2">
+    <label class="flex flex-col gap-2 text-xs md:text-sm">
       {c.query}
-      <input id="discovery-query" name="q" type="search" class="input w-full" />
+      <input
+        id="discovery-query"
+        name="q"
+        type="search"
+        class="input input-sm md:input-md text-xs md:text-sm w-full"
+      />
     </label>
-    <label class="flex gap-3 items-center">
-      <input id="discovery-all" type="checkbox" class="checkbox" />
+    <label class="flex gap-3 items-center text-xs md:text-sm">
+      <input id="discovery-all" type="checkbox" class="checkbox checkbox-sm" />
       {c.allLanguages}
     </label>
-    <button class="btn btn-primary" type="submit">
+    <button class="btn btn-sm md:btn-md btn-primary" type="submit">
       {c.search}
     </button>
   </form>
@@ -29,6 +34,7 @@ const c = featureCopy(lang);
     data-empty={c.empty}
     data-count={c.results}
     data-error={c.empty}
+    class="text-xs md:text-sm opacity-75"
   ></p>
   <div
     id="discovery-results"
@@ -124,13 +130,15 @@ const c = featureCopy(lang);
         const a = document.createElement("a");
         a.href = entry.url;
         if (entry.url.includes("#")) a.setAttribute("data-astro-reload", "");
-        a.className = "link text-lg font-semibold";
+        a.className =
+          "text-sm md:text-base font-semibold hover:text-primary transition-colors";
         a.textContent = entry.title;
         h.append(a);
         const meta = document.createElement("p");
         meta.className = "text-xs opacity-70";
         meta.textContent = `${root.dataset[entry.kind] || entry.kind} · ${entry.lang}`;
         const excerpt = document.createElement("p");
+        excerpt.className = "text-xs md:text-sm opacity-85 leading-relaxed";
         const firstWord = words[0] || "";
         const normText = normalizeText(entry.text);
         const idx = firstWord ? normText.indexOf(firstWord) : 0;

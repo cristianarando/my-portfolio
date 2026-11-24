@@ -26,23 +26,28 @@ const posts = await getCollection(
       data-spotlight="true"
       class="card bg-base-200/90 md:bg-base-200/55 md:backdrop-blur-md border border-base-content/10 hover:border-primary/40 transition-all duration-300 p-6 space-y-4 scroll-mt-24 rounded-2xl"
     >
-      <h2 class="text-xl font-bold">{path.title}</h2>
-      <p>{path.description}</p>
-      <p>
-        <strong>{c.prerequisites}: </strong>
-        <span>{path.prerequisites}</span>
+      <h2 class="text-sm md:text-base font-bold">{path.title}</h2>
+      <p class="text-xs md:text-sm leading-relaxed opacity-85">
+        {path.description}
       </p>
-      <ol class="list-decimal pl-6 space-y-3">
+      <p class="text-xs md:text-sm leading-relaxed">
+        <strong>{c.prerequisites}: </strong>
+        <span class="opacity-85">{path.prerequisites}</span>
+      </p>
+      <ol class="list-decimal pl-5 space-y-2 text-xs md:text-sm">
         {path.slugs
           .map((slug) => posts.find((p) => p.data.slug === slug))
           .filter((p) => p !== undefined)
           .map((post) => (
             <li>
-              <a class="link" href={`/${lang}/blog/${post.data.slug}/`}>
+              <a
+                class="font-medium hover:text-primary transition-colors"
+                href={`/${lang}/blog/${post.data.slug}/`}
+              >
                 {post.data.title}
               </a>{" "}
               <span
-                class="series-completion badge badge-success hidden"
+                class="series-completion badge badge-xs badge-success hidden"
                 data-url={`/${lang}/blog/${post.data.slug}/`}
               >
                 {c.complete}

@@ -7,11 +7,11 @@ const c = featureCopy(Astro.locals.lang);
 ---
 
 <Shell title={c.library} description={c.local} noindex={true}>
-  <p>{c.local}</p>
-  <button id="reading-clear" class="btn btn-outline">
+  <p class="text-xs md:text-sm opacity-80">{c.local}</p>
+  <button id="reading-clear" class="btn btn-sm btn-outline text-xs w-fit">
     {c.clear}
   </button>
-  <p id="reading-empty" role="status">
+  <p id="reading-empty" role="status" class="text-xs md:text-sm opacity-70">
     {c.empty}
   </p>
   <div
@@ -41,14 +41,16 @@ const c = featureCopy(Astro.locals.lang);
         const a = document.createElement("a");
         a.href = entry.url;
         a.textContent = entry.title;
-        a.className = "link font-semibold";
+        a.className =
+          "text-sm md:text-base font-semibold hover:text-primary transition-colors";
         h.append(a);
         const p = document.createElement("p");
+        p.className = "text-xs opacity-75";
         p.textContent = `${entry.lang} · ${Math.round(entry.progress * 100)}%${entry.completed || entry.progress >= 0.98 ? ` · ${root.dataset.complete}` : ""}`;
         card.append(h, p);
         if (entry.saved) {
           const remove = document.createElement("button");
-          remove.className = "btn btn-sm btn-outline";
+          remove.className = "btn btn-xs btn-outline w-fit";
           remove.textContent = root.dataset.saved!;
           remove.addEventListener(
             "click",
