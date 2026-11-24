@@ -7,11 +7,13 @@ import dictationImage from "../../assets/images/projects/fluenttube-dictation.we
 import speakingImage from "../../assets/images/projects/fluenttube-speaking.webp";
 import { getReadTime } from "../../utils/blog";
 import { getCaseStudy, type ProjectId } from "../../data/case-studies";
+import { getArchitectureFlow } from "../../data/architecture-flows";
 import type { Project } from "../../types";
 import { Image } from "astro:assets";
 import ContentsList from "../blog/ContentsList.astro";
 import ReaderTools from "../blog/ReaderTools.astro";
 import ShareButtons from "../blog/ShareButtons.astro";
+import ArchitectureFlow from "./ArchitectureFlow.astro";
 import ClockIcon from "../../assets/icons/clock.svg";
 
 interface Props {
@@ -24,6 +26,7 @@ const { lang } = Astro.locals;
 const t = useTranslations(lang);
 const c = featureCopy(lang);
 const study = getCaseStudy(project.id as ProjectId, lang);
+const archFlow = getArchitectureFlow(project.id as ProjectId, lang);
 const fluenttube = project.id === "fluenttube" ? fluenttubeByLang[lang] : null;
 const screenshots = [projectImage, dictationImage, speakingImage];
 
@@ -249,6 +252,7 @@ const tocHeadings = [
 
         <h2 id="a-request-through-the-system">{c.caseStudyRequestFlow}</h2>
         <p>{fluenttube?.requestFlow ?? c.caseStudyRequestText}</p>
+        {archFlow && <ArchitectureFlow flow={archFlow} lang={lang} />}
 
         <h2 id="tradeoffs">{c.caseStudyTradeoffs}</h2>
         <p>{study.tradeoff}</p>

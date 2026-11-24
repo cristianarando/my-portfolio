@@ -310,6 +310,16 @@ html {
   animation: divider-pulse-beam 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* Interactive architecture conduit signal stream */
+@keyframes arch-conduit-stream {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.arch-conduit-dash {
+  animation: arch-conduit-stream 2.8s linear infinite;
+}
+
 /* Spotlight card glow effects & 3D tilt (Desktop fine pointer only to preserve mobile GPU tile memory) */
 @media (pointer: fine) and (hover: hover) {
   [data-spotlight] {
