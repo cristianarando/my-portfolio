@@ -1,11 +1,33 @@
 ---
-import { useTranslations, getSkillsForLang } from "../../i18n/utils";
+import {
+  useTranslations,
+  getSkillsForLang,
+  getProjectsForLang,
+} from "../../i18n/utils";
+import { featureCopy } from "../../i18n/features";
+import { buildSkillsTopology } from "../../data/skills-topology";
 import SectionHeading from "../ui/SectionHeading.astro";
 import SkillIcon from "../ui/SkillIcon.astro";
 
 const { lang } = Astro.locals;
 const t = useTranslations(lang);
+const c = featureCopy(lang);
 const skillsCategories = getSkillsForLang(lang);
+const topology = buildSkillsTopology(
+  lang,
+  skillsCategories,
+  getProjectsForLang(lang),
+);
+const nodeById = new Map(topology.nodes.map((node) => [node.id, node]));
+const initialNode = topology.nodes[0];
+const initialConnections = new Set(initialNode.connections);
+const categoryLabels: Record<string, string> = {
+  frontend: t("projects.frontend"),
+  backend: t("projects.backend"),
+  fullstack: t("projects.fullstack"),
+  scientific: t("projects.scientific"),
+  ai: t("projects.ai"),
+};
 
 // Authentic astronomical constellations with real celestial geometries and lore
 interface ConstellationData {
@@ -306,12 +328,46 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
 
 <section
   id="skills"
+  data-skills-root
+  data-topology={JSON.stringify(topology)}
+  data-categories={JSON.stringify(categoryLabels)}
+  data-all-skills-label={c.topoAllDomainSkills}
   class="py-16 md:py-24 max-w-6xl mx-auto px-4 md:px-8 relative"
 >
   <SectionHeading subtitle={t("skills.subtitle")} title={t("skills.title")} />
 
+  <!-- View Switcher: Category Grid vs Systems Topology -->
+  <div
+    class="flex flex-wrap items-center justify-between gap-3 mb-8"
+    role="group"
+    aria-label={t("skills.title")}
+  >
+    <div class="inline-flex items-center gap-1.5 p-1 rounded-full bg-base-200/75 border border-base-content/10">
+      <button
+        type="button"
+        data-skills-view-btn="grid"
+        aria-pressed="true"
+        class="px-3.5 py-1.5 rounded-full text-xs font-mono font-medium border bg-primary text-primary-content border-primary shadow-sm transition-all cursor-pointer"
+      >
+        {t("skills.viewGrid")}
+      </button>
+      <button
+        type="button"
+        data-skills-view-btn="topology"
+        aria-pressed="false"
+        class="px-3.5 py-1.5 rounded-full text-xs font-mono font-medium border bg-base-200/70 text-base-content/80 border-base-content/15 hover:border-primary/40 transition-all cursor-pointer"
+      >
+        {t("skills.viewTopology")}
+      </button>
+    </div>
+  </div>
+
   <!-- Monochromatic Celestial Constellation Sector Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div
+    id="skills-grid-panel"
+    data-skills-panel="grid"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+  >
     {skillsCategories.map((category) => {
       const constellation =
         CONSTELLATIONS[category.id] || CONSTELLATIONS.languages;
@@ -439,7 +495,332 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
       );
     })}
   </div>
+
+  <!-- Interactive Systems Topology View -->
+  <div
+    id="skills-topology-panel"
+    data-skills-panel="topology"
+    hidden
+    class="space-y-6"
+  >
+    <p class="text-xs md:text-sm font-mono text-base-content/75 border-l-2 border-primary/50 pl-3">
+      {t("skills.topologyHint")}
+    </p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-6 items-start">
+      <!-- Left: Orbital Systems Graph (SVG) + Compact Quick Pills -->
+      <div class="rounded-2xl border border-base-content/12 bg-base-200/60 md:bg-base-200/45 md:backdrop-blur-md p-4 md:p-5 space-y-4">
+        <div class="relative w-full overflow-hidden rounded-xl border border-base-content/10 bg-base-100/40">
+          <svg
+            class="w-full h-auto block select-none"
+            viewBox="0 0 960 520"
+            role="img"
+            aria-label={t("skills.viewTopology")}
+          >
+            <!-- Background Orbital Field Rings -->
+            <g class="pointer-events-none text-base-content" aria-hidden="true">
+              <circle
+                cx="485"
+                cy="260"
+                r="135"
+                fill="none"
+                stroke="currentColor"
+                stroke-opacity="0.08"
+                stroke-width="1"
+                stroke-dasharray="3 5"
+              ></circle>
+              <circle
+                cx="485"
+                cy="260"
+                r="255"
+                fill="none"
+                stroke="currentColor"
+                stroke-opacity="0.06"
+                stroke-width="1"
+                stroke-dasharray="4 6"
+              ></circle>
+              <circle
+                cx="485"
+                cy="260"
+                r="380"
+                fill="none"
+                stroke="currentColor"
+                stroke-opacity="0.05"
+                stroke-width="1"
+              ></circle>
+            </g>
+
+            <!-- Dependency Conduit Edges -->
+            <g>
+              {topology.edges.map((edge) => {
+                const n1 = nodeById.get(edge.from);
+                const n2 = nodeById.get(edge.to);
+                if (!n1 || !n2) return null;
+                const active =
+                  edge.from === initialNode.id || edge.to === initialNode.id;
+                return (
+                  <line
+                    x1={n1.x}
+                    y1={n1.y}
+                    x2={n2.x}
+                    y2={n2.y}
+                    data-topo-edge
+                    data-from={edge.from}
+                    data-to={edge.to}
+                    data-active={active ? "true" : "false"}
+                    class="topo-edge"
+                  />
+                );
+              })}
+            </g>
+
+            <!-- Interactive Subsystem Nodes -->
+            <g>
+              {topology.nodes.map((node) => {
+                const isActive = node.id === initialNode.id;
+                const isConnected = initialConnections.has(node.id);
+                const state = isActive
+                  ? "active"
+                  : isConnected
+                    ? "connected"
+                    : "dimmed";
+                return (
+                  <g
+                    role="button"
+                    tabindex="0"
+                    data-topo-node={node.id}
+                    data-state={state}
+                    aria-current={isActive ? "true" : "false"}
+                    aria-label={`${node.name} (${node.constellation})`}
+                    class="topo-node cursor-pointer focus:outline-none"
+                  >
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r="44"
+                      class="topo-node-halo"
+                    />
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r="31"
+                      class="topo-node-core"
+                    />
+                    <text
+                      x={node.x}
+                      y={node.y - 4}
+                      text-anchor="middle"
+                      class="topo-node-count font-mono text-[13px] font-bold"
+                    >
+                      {node.items.length}
+                    </text>
+                    <text
+                      x={node.x}
+                      y={node.y + 11}
+                      text-anchor="middle"
+                      class="topo-node-constellation font-mono text-[8px] tracking-widest uppercase"
+                    >
+                      {node.constellation}
+                    </text>
+                    <text
+                      x={node.x}
+                      y={node.y + 52}
+                      text-anchor="middle"
+                      class="topo-node-label font-sans text-[13px] font-semibold"
+                    >
+                      {node.name}
+                    </text>
+                  </g>
+                );
+              })}
+            </g>
+          </svg>
+        </div>
+
+        <!-- Touch / Quick Domain Pills -->
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          {topology.nodes.map((node) => {
+            const isActive = node.id === initialNode.id;
+            const isConnected = initialConnections.has(node.id);
+            return (
+              <button
+                type="button"
+                data-topo-pill={node.id}
+                data-state={
+                  isActive ? "active" : isConnected ? "connected" : "idle"
+                }
+                aria-pressed={isActive ? "true" : "false"}
+                class:list={[
+                  "px-2.5 py-1 rounded-full text-[11px] font-mono border transition-colors cursor-pointer",
+                  isActive
+                    ? "bg-primary text-primary-content border-primary"
+                    : isConnected
+                      ? "bg-base-100/80 border-primary/45 text-base-content"
+                      : "bg-base-100/80 border-base-content/15 text-base-content/80 hover:border-primary/40",
+                ]}
+              >
+                {node.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <!-- Right: Live Subsystem & Project Evidence Inspector -->
+      <aside
+        data-topo-inspector
+        role="region"
+        aria-live="polite"
+        class="rounded-2xl border border-base-content/15 bg-base-200/75 md:bg-base-200/55 md:backdrop-blur-md p-5 space-y-5"
+      >
+        <div class="space-y-2 border-b border-base-content/10 pb-4">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-primary font-semibold">
+              {c.topoActiveDomain}
+            </span>
+            <span
+              data-topo-constellation
+              class="badge badge-sm badge-outline font-mono text-[10px] border-primary/40"
+            >
+              {initialNode.constellation} · ★ {initialNode.alpha}
+            </span>
+          </div>
+          <h3 data-topo-title class="text-xl font-bold text-base-content">
+            {initialNode.name}
+          </h3>
+          <p
+            data-topo-desc
+            class="text-xs text-base-content/75 leading-relaxed"
+          >
+            {initialNode.description}
+          </p>
+          <p
+            data-topo-role
+            class="text-xs md:text-sm text-base-content/90 leading-relaxed pt-1"
+          >
+            {initialNode.roleNote}
+          </p>
+        </div>
+
+        <!-- Skills Chips & Search Evidence Action -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] font-mono uppercase tracking-wider text-base-content/60">
+              {t("experience.technologies")}
+            </span>
+            <a
+              data-topo-evidence-link
+              href={`/${lang}/search/?q=${encodeURIComponent(initialNode.name)}&evidence=1`}
+              rel="nofollow"
+              class="text-[11px] font-mono text-primary hover:underline"
+            >
+              {c.topoExploreEvidence} ↗
+            </a>
+          </div>
+          <div data-topo-skills class="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              data-skill-filter=""
+              aria-pressed="true"
+              class="px-2.5 py-1 rounded-full text-[11px] font-mono border border-primary bg-primary text-primary-content font-semibold cursor-pointer"
+            >
+              {c.topoAllDomainSkills}
+            </button>
+            {initialNode.items.map((item) => (
+              <button
+                type="button"
+                data-skill-filter={item}
+                aria-pressed="false"
+                class="px-2.5 py-1 rounded-full text-[11px] font-mono border border-base-content/15 bg-base-200/70 text-base-content/85 hover:border-primary/45 cursor-pointer"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Coupled Domains Navigation -->
+        <div class="space-y-2">
+          <span class="block text-[11px] font-mono uppercase tracking-wider text-base-content/60">
+            {c.topoConnections}
+          </span>
+          <div data-topo-connections class="flex flex-wrap gap-1.5">
+            {initialNode.connections.map((connId) => {
+              const neighbor = nodeById.get(connId);
+              if (!neighbor) return null;
+              return (
+                <button
+                  type="button"
+                  data-topo-jump={neighbor.id}
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-base-content/15 bg-base-200/70 text-base-content/85 hover:border-primary/50 hover:text-primary cursor-pointer"
+                >
+                  <span class="text-primary text-[10px]" aria-hidden="true">
+                    ✦
+                  </span>
+                  <span>{neighbor.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <!-- Verified Portfolio Projects -->
+        <div class="space-y-2.5 pt-2 border-t border-base-content/10">
+          <span class="block text-[11px] font-mono uppercase tracking-wider text-base-content/60">
+            {c.topoVerifiedProjects}
+          </span>
+          <div data-topo-projects class="space-y-2">
+            {initialNode.projects.map((project) => (
+              <a
+                href={project.url}
+                data-topo-project-card={project.id}
+                class="group block rounded-xl border border-base-content/12 bg-base-200/60 hover:border-primary/45 hover:bg-base-100/90 p-3 transition-all"
+              >
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <span class="badge badge-xs badge-outline border-primary/40 text-primary font-mono">
+                    {categoryLabels[project.category] || project.category}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    class="text-xs font-mono opacity-55 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"
+                  >
+                    →
+                  </span>
+                </div>
+                <div class="text-xs md:text-sm font-semibold text-base-content group-hover:text-primary transition-colors leading-snug mb-2">
+                  {project.title}
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  {project.matchedSkills.map((matched) => (
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-base-300/75 text-base-content/75">
+                      {matched}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            ))}
+          </div>
+          <p
+            data-topo-empty
+            hidden
+            class="text-xs font-mono text-base-content/65"
+          >
+            {c.empty}
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
 </section>
+
+<script>
+  import { onPageLoad } from "../../scripts/page-lifecycle";
+  import { initSkillsTopology } from "../../scripts/skills-topology";
+
+  onPageLoad((signal) => {
+    initSkillsTopology(signal);
+  });
+</script>
 
 <style>
   .skill-card:target {
@@ -490,8 +871,120 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
 
   @media (prefers-reduced-motion: reduce) {
     .sector-ripple,
-    .sector-orbit {
+    .sector-orbit,
+    .topo-edge[data-active="true"] {
       animation: none !important;
     }
+  }
+
+  /* Interactive Systems Topology SVG styling */
+  .topo-edge {
+    stroke: var(--color-base-content);
+    stroke-opacity: 0.14;
+    stroke-width: 1.25;
+    transition:
+      stroke 260ms ease,
+      stroke-opacity 260ms ease,
+      stroke-width 260ms ease;
+  }
+
+  .topo-edge[data-active="true"] {
+    stroke: var(--color-primary);
+    stroke-opacity: 0.78;
+    stroke-width: 2.25;
+    stroke-dasharray: 5 5;
+    animation: topo-signal-flow 1.8s linear infinite;
+  }
+
+  @keyframes topo-signal-flow {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+
+  .topo-node-halo {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-opacity: 0;
+    stroke-width: 1.5;
+    stroke-dasharray: 3 3;
+    transition:
+      stroke-opacity 240ms ease,
+      transform 240ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .topo-node-core {
+    fill: var(--color-base-200);
+    stroke: var(--color-base-content);
+    stroke-opacity: 0.25;
+    stroke-width: 1.5;
+    transition:
+      fill 240ms ease,
+      stroke 240ms ease,
+      stroke-opacity 240ms ease,
+      transform 240ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .topo-node-count,
+  .topo-node-label {
+    fill: var(--color-base-content);
+    transition:
+      fill 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .topo-node-constellation {
+    fill: var(--color-base-content);
+    opacity: 0.65;
+    transition:
+      fill 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .topo-node:focus-visible .topo-node-halo {
+    stroke-opacity: 1;
+  }
+
+  .topo-node[data-state="active"] .topo-node-core {
+    fill: var(--color-primary);
+    stroke: var(--color-primary);
+    stroke-opacity: 1;
+    transform: scale(1.08);
+  }
+
+  .topo-node[data-state="active"] .topo-node-halo {
+    stroke-opacity: 0.9;
+    transform: scale(1.08);
+  }
+
+  .topo-node[data-state="active"] .topo-node-count,
+  .topo-node[data-state="active"] .topo-node-constellation {
+    fill: var(--color-primary-content);
+    opacity: 1;
+  }
+
+  .topo-node[data-state="active"] .topo-node-label {
+    fill: var(--color-primary);
+  }
+
+  .topo-node[data-state="connected"] .topo-node-core {
+    stroke: var(--color-primary);
+    stroke-opacity: 0.72;
+    fill: var(--color-base-100);
+  }
+
+  .topo-node[data-state="connected"] .topo-node-halo {
+    stroke-opacity: 0.3;
+  }
+
+  .topo-node[data-state="dimmed"] .topo-node-core,
+  .topo-node[data-state="dimmed"] .topo-node-count,
+  .topo-node[data-state="dimmed"] .topo-node-constellation,
+  .topo-node[data-state="dimmed"] .topo-node-label {
+    opacity: 0.45;
   }
 </style>

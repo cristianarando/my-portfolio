@@ -1,4 +1,5 @@
-import { getProjectsForLang, getSkillsForLang, type Lang } from "../i18n/utils";
+import type { Lang } from "../i18n/utils";
+import type { Project, SkillCategory } from "../types";
 import type { ProjectId } from "./projects";
 
 export type SkillDomainId =
@@ -219,9 +220,11 @@ function projectMatchesSkill(
   return false;
 }
 
-export function getSkillsTopology(lang: Lang = "en"): SkillsTopology {
-  const categories = getSkillsForLang(lang);
-  const projects = getProjectsForLang(lang);
+export function buildSkillsTopology(
+  lang: Lang,
+  categories: readonly SkillCategory[],
+  projects: readonly Project[],
+): SkillsTopology {
   const notes = ROLE_NOTES[lang] ?? ROLE_NOTES.en;
 
   const nodes: TopologyNode[] = categories.map((cat) => {
