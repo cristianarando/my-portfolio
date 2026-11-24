@@ -12,6 +12,13 @@ import starlightGrainImage from "../assets/images/starlight-grain.png";
 const { lang } = Astro.locals;
 const t = useTranslations(lang);
 
+interface Props {
+  showCallout?: boolean;
+}
+
+const isHomePage = /^\/[a-z]{2}\/?$/.test(Astro.url.pathname);
+const { showCallout = isHomePage } = Astro.props;
+
 const homeUrl = getRelativeLocaleUrl(lang, "");
 
 const LOCALIZED_COPY = {
@@ -66,57 +73,59 @@ const LOCALIZED_COPY = {
 ---
 
 <footer class="text-base-content mt-auto relative overflow-hidden bg-transparent">
-  <!-- ── 1. PRE-FOOTER CALLOUT: CROWNING THE PLANETARY HORIZON ── -->
-  <div class="relative z-20 max-w-4xl mx-auto px-4 md:px-8 pt-16 md:pt-24 pb-10 text-center space-y-4 md:space-y-6">
-    <SectionHeading
-      subtitle={t("footer.subtitle")}
-      title={t("footer.collaborate")}
-      class="mb-4 md:mb-5"
-    />
+  <!-- ── 1. PRE-FOOTER CALLOUT: CROWNING THE PLANETARY HORIZON (HOME ONLY) ── -->
+  {showCallout && (
+    <div class="relative z-20 max-w-4xl mx-auto px-4 md:px-8 pt-16 md:pt-24 pb-10 text-center space-y-4 md:space-y-6">
+      <SectionHeading
+        subtitle={t("footer.subtitle")}
+        title={t("footer.collaborate")}
+        class="mb-4 md:mb-5"
+      />
 
-    <p class="text-sm md:text-base text-base-content/75 max-w-xl mx-auto leading-relaxed font-medium">
-      {t("footer.collaborateText") || LOCALIZED_COPY.subHeadline}
-    </p>
+      <p class="text-sm md:text-base text-base-content/75 max-w-xl mx-auto leading-relaxed font-medium">
+        {t("footer.collaborateText") || LOCALIZED_COPY.subHeadline}
+      </p>
 
-    <!-- Action Buttons: Enviar Mensaje + Copiar Correo -->
-    <div class="flex flex-wrap items-center justify-center gap-3.5 pt-2 relative z-30">
-      <a
-        data-magnetic="true"
-        href={`mailto:${SITE.email}`}
-        class="btn btn-primary btn-sm md:btn-md gap-2 rounded-xl font-semibold shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
-      >
-        <MailIcon class="w-4 h-4" />
-        <span>{LOCALIZED_COPY.sendMsg}</span>
-      </a>
-
-      <button
-        id="copy-email-btn"
-        data-magnetic="true"
-        data-email={SITE.email}
-        data-copied={LOCALIZED_COPY.copied}
-        type="button"
-        class="btn btn-neutral btn-sm md:btn-md gap-2 rounded-xl font-medium border border-base-content/15 hover:border-base-content/30 bg-base-200/60 hover:bg-base-300/80 transition-all duration-300 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 cursor-pointer"
-        aria-label={LOCALIZED_COPY.copyEmail}
-      >
-        <span
-          id="copy-email-icon"
-          class="inline-flex items-center justify-center"
+      <!-- Action Buttons: Enviar Mensaje + Copiar Correo -->
+      <div class="flex flex-wrap items-center justify-center gap-3.5 pt-2 relative z-30">
+        <a
+          data-magnetic="true"
+          href={`mailto:${SITE.email}`}
+          class="btn btn-primary btn-sm md:btn-md gap-2 rounded-xl font-semibold shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
         >
-          <svg
-            class="w-4 h-4 opacity-80"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
+          <MailIcon class="w-4 h-4" />
+          <span>{LOCALIZED_COPY.sendMsg}</span>
+        </a>
+
+        <button
+          id="copy-email-btn"
+          data-magnetic="true"
+          data-email={SITE.email}
+          data-copied={LOCALIZED_COPY.copied}
+          type="button"
+          class="btn btn-neutral btn-sm md:btn-md gap-2 rounded-xl font-medium border border-base-content/15 hover:border-base-content/30 bg-base-200/60 hover:bg-base-300/80 transition-all duration-300 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 cursor-pointer"
+          aria-label={LOCALIZED_COPY.copyEmail}
+        >
+          <span
+            id="copy-email-icon"
+            class="inline-flex items-center justify-center"
           >
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-        </span>
-        <span id="copy-email-text">{LOCALIZED_COPY.copyEmail}</span>
-      </button>
+            <svg
+              class="w-4 h-4 opacity-80"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </span>
+          <span id="copy-email-text">{LOCALIZED_COPY.copyEmail}</span>
+        </button>
+      </div>
     </div>
-  </div>
+  )}
 
   <!-- ── 2. THE PLANET CREST & HORIZON ARCHITECTURE (RESPONSIVE STAGE) ── -->
   <div class="planet-crest-stage orbital-sunrise-stage relative w-full h-45 sm:h-52.5 md:h-60 overflow-visible pointer-events-none z-5 mt-2 md:mt-4">
