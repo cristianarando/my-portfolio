@@ -507,22 +507,22 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
       {t("skills.topologyHint")}
     </p>
 
-    <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-6 items-stretch">
       <!-- Left: Orbital Systems Graph (SVG) + Compact Quick Pills -->
-      <div class="rounded-2xl border border-base-content/12 bg-base-200/60 md:bg-base-200/45 md:backdrop-blur-md p-4 md:p-5 space-y-4">
+      <div class="rounded-2xl border border-base-content/12 bg-base-200/60 md:bg-base-200/45 md:backdrop-blur-md p-4 md:p-5 space-y-4 flex flex-col justify-between">
         <div class="relative w-full overflow-hidden rounded-xl border border-base-content/10 bg-base-100/40">
           <svg
             class="w-full h-auto block select-none"
-            viewBox="0 0 960 520"
+            viewBox="0 0 640 600"
             role="img"
             aria-label={t("skills.viewTopology")}
           >
             <!-- Background Orbital Field Rings -->
             <g class="pointer-events-none text-base-content" aria-hidden="true">
               <circle
-                cx="485"
-                cy="260"
-                r="135"
+                cx="320"
+                cy="290"
+                r="115"
                 fill="none"
                 stroke="currentColor"
                 stroke-opacity="0.08"
@@ -530,9 +530,9 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
                 stroke-dasharray="3 5"
               ></circle>
               <circle
-                cx="485"
-                cy="260"
-                r="255"
+                cx="320"
+                cy="290"
+                r="205"
                 fill="none"
                 stroke="currentColor"
                 stroke-opacity="0.06"
@@ -540,9 +540,9 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
                 stroke-dasharray="4 6"
               ></circle>
               <circle
-                cx="485"
-                cy="260"
-                r="380"
+                cx="320"
+                cy="290"
+                r="275"
                 fill="none"
                 stroke="currentColor"
                 stroke-opacity="0.05"
@@ -597,36 +597,44 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
                     <circle
                       cx={node.x}
                       cy={node.y}
-                      r="44"
+                      r="54"
                       class="topo-node-halo"
                     />
                     <circle
                       cx={node.x}
                       cy={node.y}
-                      r="31"
+                      r="42"
                       class="topo-node-core"
                     />
                     <text
                       x={node.x}
                       y={node.y - 4}
                       text-anchor="middle"
-                      class="topo-node-count font-mono text-[13px] font-bold"
+                      class="topo-node-count font-mono text-[20px] font-extrabold"
                     >
                       {node.items.length}
                     </text>
                     <text
                       x={node.x}
-                      y={node.y + 11}
+                      y={node.y + 14}
                       text-anchor="middle"
-                      class="topo-node-constellation font-mono text-[8px] tracking-widest uppercase"
+                      class="topo-node-constellation font-mono text-[10px] font-semibold tracking-wider uppercase"
                     >
                       {node.constellation}
                     </text>
+                    <rect
+                      x={node.x - 86}
+                      y={node.y + 49}
+                      width="172"
+                      height="24"
+                      rx="12"
+                      class="topo-node-label-bg"
+                    />
                     <text
                       x={node.x}
-                      y={node.y + 52}
+                      y={node.y + 65}
                       text-anchor="middle"
-                      class="topo-node-label font-sans text-[13px] font-semibold"
+                      class="topo-node-label font-sans text-[13.5px] font-bold"
                     >
                       {node.name}
                     </text>
@@ -939,9 +947,19 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
 
   .topo-node-constellation {
     fill: var(--color-base-content);
-    opacity: 0.65;
+    opacity: 0.85;
     transition:
       fill 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .topo-node-label-bg {
+    fill: color-mix(in oklch, var(--color-base-100) 88%, transparent);
+    stroke: color-mix(in oklch, var(--color-base-content) 14%, transparent);
+    stroke-width: 1;
+    transition:
+      fill 220ms ease,
+      stroke 220ms ease,
       opacity 220ms ease;
   }
 
@@ -971,6 +989,10 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
     fill: var(--color-primary);
   }
 
+  .topo-node[data-state="active"] .topo-node-label-bg {
+    stroke: color-mix(in oklch, var(--color-primary) 55%, transparent);
+  }
+
   .topo-node[data-state="connected"] .topo-node-core {
     stroke: var(--color-primary);
     stroke-opacity: 0.72;
@@ -984,7 +1006,8 @@ const CONSTELLATIONS: Record<string, ConstellationData> = {
   .topo-node[data-state="dimmed"] .topo-node-core,
   .topo-node[data-state="dimmed"] .topo-node-count,
   .topo-node[data-state="dimmed"] .topo-node-constellation,
-  .topo-node[data-state="dimmed"] .topo-node-label {
-    opacity: 0.45;
+  .topo-node[data-state="dimmed"] .topo-node-label,
+  .topo-node[data-state="dimmed"] .topo-node-label-bg {
+    opacity: 0.68;
   }
 </style>

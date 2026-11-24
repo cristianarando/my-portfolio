@@ -54,14 +54,14 @@ const NODE_META: Record<
     alpha: string;
   }
 > = {
-  languages: { x: 150, y: 145, constellation: "CYGNUS", alpha: "Deneb" },
-  frontend: { x: 390, y: 115, constellation: "LYRA", alpha: "Vega" },
-  backend: { x: 610, y: 145, constellation: "URSA MAJOR", alpha: "Dubhe" },
-  databases: { x: 825, y: 130, constellation: "CASSIOPEIA", alpha: "Schedar" },
-  "soft-skills": { x: 150, y: 385, constellation: "AQUILA", alpha: "Altair" },
-  ai: { x: 390, y: 405, constellation: "PEGASUS", alpha: "51 Pegasi" },
-  security: { x: 610, y: 385, constellation: "DRACO", alpha: "Eltanin" },
-  devops: { x: 825, y: 395, constellation: "ORION", alpha: "Alnilam" },
+  languages: { x: 135, y: 115, constellation: "CYGNUS", alpha: "Deneb" },
+  frontend: { x: 320, y: 95, constellation: "LYRA", alpha: "Vega" },
+  databases: { x: 505, y: 115, constellation: "CASSIOPEIA", alpha: "Schedar" },
+  ai: { x: 115, y: 300, constellation: "PEGASUS", alpha: "51 Pegasi" },
+  backend: { x: 320, y: 290, constellation: "URSA MAJOR", alpha: "Dubhe" },
+  security: { x: 525, y: 300, constellation: "DRACO", alpha: "Eltanin" },
+  "soft-skills": { x: 185, y: 475, constellation: "AQUILA", alpha: "Altair" },
+  devops: { x: 455, y: 475, constellation: "ORION", alpha: "Alnilam" },
 };
 
 export const TOPOLOGY_EDGES: readonly TopologyEdge[] = [
