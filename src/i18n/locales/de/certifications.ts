@@ -124,6 +124,16 @@ export const certifications: CertificationCategory[] = [
     name: "Software-Grundlagen",
     items: [
       {
+        id: "udemy-software-architecture",
+        title: "Software-Architektur & Design moderner Großsysteme",
+        institution: "Udemy",
+        date: "November 2026",
+        description:
+          "Abschluss eines 8-stündigen Kurses über Software-Architektur und das Design großskalierter Systeme mit Fokus auf Skalierbarkeit, Hochverfügbarkeit, verteilte Architekturen und Architekturentscheidungen.",
+        link: "https://drive.google.com/file/d/1R4SggqaN1L0zMBMuPr46O6CBSNmiE3d1/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
         id: "solid-clean-code",
         title: "SOLID-Prinzipien und Clean Code",
         institution: "DevTalles",

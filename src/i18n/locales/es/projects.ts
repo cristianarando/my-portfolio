@@ -18,6 +18,17 @@ export const projectCopy = {
       "Estudio de investigación para modelado de dinámica de multitudes y evacuaciones de emergencia mediante el modelo de fuerzas sociales HFV en Python y FastAPI.",
   },
   fluenttube: { title: fluenttube.title, description: fluenttube.description },
+  "reservation-microsystem": {
+    title:
+      "Reservas App - Microsistema de Citas y Agendamiento Multi-Profesional",
+    description:
+      "Plataforma modular marca blanca de agendamiento de citas y reservas en línea construida con Next.js 16, TypeScript, Prisma, sincronización SSE en vivo, Web Push nativo RFC 8292/8291, PWA y Docker.",
+  },
+  "inside-link": {
+    title: "InsideLink v2 - Enlaces Cortos Inteligentes, HUBs y Analítica",
+    description:
+      "Motor autoalojado de enlaces cortos para propietario único, micro-landings polimórficos (HUB), estudio de temas, generador QR y analítica sin PII construido con Next.js 16, Turso, Drizzle ORM y Better-Auth.",
+  },
   "explora-bolivia": {
     title: "Explora Bolivia - Travel Guide App",
     description:

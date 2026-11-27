@@ -151,14 +151,17 @@ test("skills topology toggles grid/topology views, highlights coupled edges, fil
     );
     assert.ok(jumpIds.includes("backend") && jumpIds.includes("devops"));
 
-    // 4. Filter projects by individual skill ('SQLite' -> FluentTube only)
+    // 4. Filter projects by individual skill ('SQLite' -> FluentTube & Reservas App)
     const sqliteBtn = $("[data-skill-filter='SQLite']");
     assert.ok(sqliteBtn, "SQLite skill filter button exists");
     sqliteBtn.click();
     const filteredProjectIds = $$("[data-topo-project-card]").map((el) =>
       el.getAttribute("data-topo-project-card"),
     );
-    assert.deepEqual(filteredProjectIds, ["fluenttube"]);
+    assert.deepEqual(filteredProjectIds, [
+      "fluenttube",
+      "reservation-microsystem",
+    ]);
     assert.ok(
       $("[data-topo-evidence-link]").href.includes("q=SQLite"),
       "evidence link reflects selected skill query",

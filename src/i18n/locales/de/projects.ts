@@ -18,6 +18,16 @@ export const projectCopy = {
       "Forschungsstudio für Fußgängerdynamik und Evakuierungssimulationen basierend auf dem HFV-Social-Force-Modell mit Python und FastAPI.",
   },
   fluenttube: { title: fluenttube.title, description: fluenttube.description },
+  "reservation-microsystem": {
+    title: "Reservas App - Multi-Staff-Terminbuchungsplattform",
+    description:
+      "Modulare White-Label-Plattform für Terminplanung und Online-Buchungen mit Next.js 16, TypeScript, Prisma, SSE-Echtzeitsynchronisation, nativem RFC 8292/8291 Web Push, PWA und Docker.",
+  },
+  "inside-link": {
+    title: "InsideLink v2 - Smart Shortlinks, Rich HUBs & Analytik",
+    description:
+      "Selbst gehostete Shortlink-Engine für Einzelbetreiber mit polymorphen Projekt-HUBs, Theme-Studio, QR-Generator und datenschutzfreundlicher Analytik auf Basis von Next.js 16, Turso, Drizzle ORM und Better-Auth.",
+  },
   "explora-bolivia": {
     title: "Explora Bolivia - Travel Guide App",
     description:

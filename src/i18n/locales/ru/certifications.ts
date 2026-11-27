@@ -124,6 +124,16 @@ export const certifications: CertificationCategory[] = [
     name: "Основы разработки ПО",
     items: [
       {
+        id: "udemy-software-architecture",
+        title: "Software Architecture & Design of Modern Large Scale Systems",
+        institution: "Udemy",
+        date: "Ноябрь 2026",
+        description:
+          "Пройден 8-часовой курс по архитектуре ПО и проектированию крупномасштабных систем, охватывающий масштабируемость, высокую доступность, распределенные архитектуры и принятие архитектурных решений.",
+        link: "https://drive.google.com/file/d/1R4SggqaN1L0zMBMuPr46O6CBSNmiE3d1/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
         id: "solid-clean-code",
         title: "SOLID Principles and Clean Code",
         institution: "DevTalles",

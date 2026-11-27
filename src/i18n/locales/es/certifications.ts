@@ -124,6 +124,17 @@ export const certifications: CertificationCategory[] = [
     name: "Fundamentos de Software",
     items: [
       {
+        id: "udemy-software-architecture",
+        title:
+          "Arquitectura de Software y Diseño de Sistemas Modernos a Gran Escala",
+        institution: "Udemy",
+        date: "Noviembre 2026",
+        description:
+          "Curso completado de 8 horas sobre arquitectura de software y diseño de sistemas a gran escala, cubriendo escalabilidad, alta disponibilidad, arquitecturas distribuidas y toma de decisiones arquitectónicas.",
+        link: "https://drive.google.com/file/d/1R4SggqaN1L0zMBMuPr46O6CBSNmiE3d1/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
         id: "solid-clean-code",
         title: "Principios SOLID y Código Limpio",
         institution: "DevTalles",

@@ -62,6 +62,36 @@ export const caseStudiesByLang: Record<
         "Separate scenario authoring, physical numerical integration, and telemetry recording into decoupled pipelines so that experiment configurations remain completely deterministic and reproducible.",
     },
     fluenttube: fluenttubeByLang.en.study,
+    "reservation-microsystem": {
+      problem:
+        "Multi-professional service businesses (clinics, salons, studios) need a white-label online booking and staff scheduling platform with real-time slot availability, role-scoped operations (ADMIN and PROVIDER), atomic conflict prevention, and reliable reminders on low-memory single-node infrastructure.",
+      architecture: [
+        "Next.js 16 App Router and React 19 powering a 4-step customer booking wizard (with OAuth draft persistence, load-balanced auto-assignment, ISO/IEC 18004 SVG QR pass, and .ics/Google Calendar export) alongside a role-protected /admin portal.",
+        "Modular service layer (booking-service, schedule-service, staff-service, reminder-service) over Prisma 6 and SQLite WAL wrapped in BEGIN IMMEDIATE write locks with IANA timezone arithmetic.",
+        "Server-side filtered SSE (/api/events) preventing cross-role PII leaks, paired with zero-dependency RFC 8292 VAPID ES256 and RFC 8291 aes128gcm Web Push over node:crypto backed by a persistent PushDelivery outbox with automated 24h/2h reminders.",
+        "Hardened HMAC-SHA256 HttpOnly sessions with sessionVersion revocation, Google OAuth CSRF state nonces, SSRF guards, proxy-aware rate limiting, anti-hoarding booking caps, and 2-strike no-show protection.",
+        "Low-memory node:24-alpine Docker deployment (650m limit, 127.0.0.1:3000) with rotating preventive SQLite backups and prisma migrate deploy startup recovery.",
+      ],
+      tradeoff:
+        "Running SQLite WAL with BEGIN IMMEDIATE locks and zero-dependency native Web Push keeps infrastructure self-contained and predictable on 1 GB RAM VMs without external brokers, at the cost of single-node write concurrency unless switched to PostgreSQL via Prisma.",
+      lesson:
+        "Enforce availability invariants, role-scoped SSE filtering, and push delivery idempotency (eventKey outbox) inside transactional server boundaries rather than relying on client refreshes or optimistic UI state.",
+    },
+    "inside-link": {
+      problem:
+        "Creators and engineers often rely on bloated third-party link shorteners filled with tracking pixels and subscription limits; InsideLink v2 provides a self-hosted, single-owner shortlink engine, polymorphic micro-landing HUB platform, Bento directory, and privacy-first Analytics 3.0 on a custom domain (links.cristianarando.dev).",
+      architecture: [
+        "Next.js 16 (src/proxy.ts + App Router + after() non-blocking telemetry) and React 19 serving the public Bento/Grid/List directory (/), slug resolver (/[slug]), and private /admin workspace.",
+        "Turso (@libsql/client) and Drizzle ORM storing site_settings, links, click_events, and pin_attempts with O(1) keyset cursor pagination and single-roundtrip db.batch(...) Analytics 3.0 queries (90-day heatmap, 24h UTC distribution, top cities, HUB block CTR, and CSV export).",
+        "Polymorphic Rich HUB pages (type = 'HUB') supporting 6 block kinds (button, cached github-repo, click-to-play youtube/spotify facades, code, callout), plus 6 dark presets, custom HEX theme overrides, and branded SVG/PNG QR generation.",
+        "Smart conditional routing (country, Accept-Language, device, os), scheduled launch countdowns (starts_at), expiration fallbacks (307 or HTTP 410 Gone), fullscreen cloaking, and SSRF-safe metadata/frame/health scanners.",
+        "Single-owner Better-Auth GitHub OAuth locked via fail-closed ALLOWED_GITHUB_ID database hooks, zero external API keys, scrypt + timingSafeEqual PIN hashing, HMAC-SHA256 unlock cookies, and atomic SQLite rate limiting (5 attempts / 60s), backed by 106 Vitest tests across 27 suites.",
+      ],
+      tradeoff:
+        "Locking authentication to a single owner and keeping all telemetry inside SQLite/Turso via after() and db.batch() eliminates multi-tenant complexity, external analytics scripts, and recurring SaaS dependencies, at the expense of being purpose-built for single-owner personal infrastructure rather than multi-tenant resale.",
+      lesson:
+        "Decoupling redirect resolution from telemetry via non-blocking after() hooks and enforcing fail-closed ownership checks and SSRF guards at the server boundary keeps a personal link platform fast, auditable, and resilient.",
+    },
     "explora-bolivia": {
       problem:
         "A Bolivia-focused exploration application needs a clear way to present destinations and organize the data behind that experience.",
@@ -149,6 +179,36 @@ export const caseStudiesByLang: Record<
         "Separa la edición de escenarios, la integración física numérica y la telemetría en pipelines desacoplados para que la configuración experimental sea totalmente determinista y reproducible.",
     },
     fluenttube: fluenttubeByLang.es.study,
+    "reservation-microsystem": {
+      problem:
+        "Los negocios de servicios con múltiples profesionales (clínicas, salones, estudios) necesitan una plataforma marca blanca de reservas en línea y gestión de agenda con disponibilidad en tiempo real, operaciones aisladas por rol (ADMIN y PROVIDER), prevención atómica de conflictos y recordatorios confiables sobre infraestructura de baja memoria.",
+      architecture: [
+        "Next.js 16 App Router y React 19 impulsan un asistente de reserva en 4 pasos (con persistencia de borrador tras OAuth, autoasignación balanceada, pase QR SVG ISO/IEC 18004 y exportación .ics/Google Calendar) junto a un portal /admin protegido por rol.",
+        "Capa de servicios modular (booking-service, schedule-service, staff-service, reminder-service) sobre Prisma 6 y SQLite WAL protegida con bloqueos de escritura BEGIN IMMEDIATE y aritmética de zonas horarias IANA.",
+        "Eventos SSE filtrados en servidor (/api/events) para evitar filtraciones de PII entre roles, junto con Web Push nativo sin dependencias (RFC 8292 VAPID ES256 y RFC 8291 aes128gcm sobre node:crypto) respaldado por una bandeja persistente PushDelivery con recordatorios automáticos de 24h y 2h.",
+        "Sesiones HttpOnly HMAC-SHA256 con revocación por sessionVersion, nonces CSRF en Google OAuth, protección SSRF, limitación de tasa consciente de proxies, tope de reservas activas y bloqueo automático tras 2 inasistencias.",
+        "Despliegue Docker ligero sobre node:24-alpine (límite de 650m en 127.0.0.1:3000) con respaldos rotativos preventivos de SQLite y recuperación automática con prisma migrate deploy al iniciar.",
+      ],
+      tradeoff:
+        "Ejecutar SQLite WAL con bloqueos BEGIN IMMEDIATE y Web Push nativo sin dependencias mantiene la infraestructura autocontenida y predecible en VMs de 1 GB de RAM sin brókers externos, a cambio de limitar las escrituras concurrentes a un solo nodo salvo que se cambie el proveedor de Prisma a PostgreSQL.",
+      lesson:
+        "Garantizar los invariantes de disponibilidad, el filtrado SSE por rol y la idempotencia de notificaciones (outbox con eventKey) dentro de fronteras transaccionales en servidor evita depender de recargas en el cliente o estados optimistas.",
+    },
+    "inside-link": {
+      problem:
+        "Creadores e ingenieros suelen depender de acortadores de enlaces de terceros cargados de píxeles de rastreo y límites de suscripción; InsideLink v2 ofrece un motor autoalojado de enlaces cortos para propietario único, plataforma de micro-landings polimórficos (HUB), directorio Bento y analítica 3.0 sin PII bajo dominio propio (links.cristianarando.dev).",
+      architecture: [
+        "Next.js 16 (src/proxy.ts + App Router + telemetría no bloqueante en after()) y React 19 sirviendo el directorio público Bento/Grid/List (/), el resolvedor de slugs (/[slug]) y el panel privado /admin.",
+        "Turso (@libsql/client) y Drizzle ORM almacenando site_settings, links, click_events y pin_attempts con paginación por cursor O(1) y consultas de analítica 3.0 en un único viaje db.batch(...) (mapa de calor de 90 días, distribución horaria UTC de 24h, ciudades, CTR por bloque HUB y exportación CSV).",
+        "Páginas Rich HUB polimórficas (type = 'HUB') con 6 tipos de bloques (button, github-repo con caché, fachadas click-to-play de youtube/spotify, code y callout), además de 6 presets oscuros, overrides de tema HEX y generación de QR en SVG/PNG.",
+        "Enrutamiento condicional inteligente (país, Accept-Language, dispositivo, sistema operativo), cuentas regresivas de lanzamiento programado (starts_at), respaldos de expiración (307 o HTTP 410 Gone), cloaking a pantalla completa y escáneres de metadatos/marcos/salud con defensa SSRF.",
+        "Autenticación GitHub OAuth para propietario único bloqueada en base de datos mediante hooks fail-closed con ALLOWED_GITHUB_ID, cero claves API externas, PINs con scrypt + timingSafeEqual, cookies HMAC-SHA256 y limitación atómica en SQLite (5 intentos / 60s), respaldado por 106 pruebas en Vitest.",
+      ],
+      tradeoff:
+        "Restringir la autenticación a un único propietario y mantener toda la telemetría en SQLite/Turso mediante after() y db.batch() elimina la complejidad multi-inquilino, los scripts externos y las dependencias SaaS, a costa de estar diseñado específicamente para infraestructura personal y no para reventa multi-inquilino.",
+      lesson:
+        "Desacoplar la resolución de redirecciones de la telemetría mediante hooks no bloqueantes after() y aplicar comprobaciones de propiedad fail-closed y guardias SSRF en la frontera del servidor mantiene la plataforma rápida, auditable y resiliente.",
+    },
     "explora-bolivia": {
       problem:
         "Aplicación web de exploración turística en Bolivia que requiere una presentación intuitiva de atractivos y un esquema relacional estructurado para su catálogo.",
@@ -236,6 +296,36 @@ export const caseStudiesByLang: Record<
         "Trennen Sie Szenario-Erstellung, numerische Integration und Telemetrieaufzeichnung in voneinander unabhängige Pipelines für vollständige Reproduzierbarkeit.",
     },
     fluenttube: fluenttubeByLang.de.study,
+    "reservation-microsystem": {
+      problem:
+        "Dienstleistungsunternehmen mit mehreren Fachkräften (Kliniken, Salons, Studios) benötigen eine White-Label-Plattform für Online-Buchungen und Terminplanung mit Echtzeit-Verfügbarkeit, rollenbasierter Trennung (ADMIN und PROVIDER), atomarer Konfliktvermeidung und zuverlässigen Erinnerungen auf speicherarmer Infrastruktur.",
+      architecture: [
+        "Next.js 16 App Router und React 19 steuern einen 4-stufigen Buchungsassistenten (mit OAuth-Entwurfspersistenz, automatischer Lastverteilung, ISO/IEC-18004-SVG-QR-Pass und .ics-/Google-Calendar-Export) sowie ein rollengeschütztes /admin-Portal.",
+        "Modulare Serviceschicht (booking-service, schedule-service, staff-service, reminder-service) über Prisma 6 und SQLite WAL mit BEGIN-IMMEDIATE-Schreibsperren und IANA-Zeitzonenarithmetik.",
+        "Serverseitig gefiltertes SSE (/api/events) gegen rollenübergreifende PII-Lecks, kombiniert mit abhängigkeitsfreiem nativem RFC-8292-VAPID-ES256- und RFC-8291-aes128gcm-Web-Push über node:crypto und einer persistenten PushDelivery-Outbox für automatische 24h-/2h-Erinnerungen.",
+        "Gehärtete HMAC-SHA256-HttpOnly-Sitzungen mit sessionVersion-Widerruf, Google-OAuth-CSRF-Nonces, SSRF-Schutz, Proxy-bewusstem Rate-Limiting, Anti-Hoarding-Buchungslimits und 2-Strike-No-Show-Sperre.",
+        "Speicherschonendes node:24-alpine-Docker-Deployment (650m Limit, 127.0.0.1:3000) mit rotierenden SQLite-Backups und prisma-migrate-deploy-Wiederherstellung beim Start.",
+      ],
+      tradeoff:
+        "SQLite WAL mit BEGIN-IMMEDIATE-Sperren und nativem Web Push ohne externe Broker hält die Infrastruktur auf 1-GB-RAM-VMs vollständig eigenständig und vorhersehbar, begrenzt jedoch die Schreibparallelität auf einen Knoten, solange Prisma nicht auf PostgreSQL umgestellt wird.",
+      lesson:
+        "Verfügbarkeitsinvarianten, rollenbasierte SSE-Filterung und Push-Idempotenz (eventKey-Outbox) gehören in transaktionale Server-Grenzen statt in optimistische UI-Aktualisierungen.",
+    },
+    "inside-link": {
+      problem:
+        "Entwickler und Creator greifen oft auf überladene Drittanbieter-Shortener mit Tracking-Pixeln und Abo-Limits zurück; InsideLink v2 bietet eine selbst gehostete Shortlink-Engine für Einzelbetreiber, polymorphe Micro-Landing-HUBs, ein Bento-Verzeichnis und datenschutzkonforme Analytik 3.0 unter eigener Domain (links.cristianarando.dev).",
+      architecture: [
+        "Next.js 16 (src/proxy.ts + App Router + nicht-blockierende after()-Telemetrie) und React 19 für das öffentliche Bento/Grid/List-Verzeichnis (/), den Slug-Resolver (/[slug]) und den privaten /admin-Bereich.",
+        "Turso (@libsql/client) und Drizzle ORM speichern site_settings, links, click_events und pin_attempts mit O(1)-Keyset-Cursor-Pagination und Single-Roundtrip-db.batch(...)-Analytikabfragen (90-Tage-Heatmap, 24h-UTC-Verteilung, Top-Städte, HUB-Block-CTR und CSV-Export).",
+        "Polymorphe Rich-HUB-Seiten (type = 'HUB') mit 6 Blocktypen (button, gecachte github-repo-Karten, Click-to-Play-youtube/spotify-Fassaden, code, callout) sowie 6 Dark-Presets, benutzerdefinierten HEX-Themes und SVG/PNG-QR-Code-Generierung.",
+        "Intelligentes bedingtes Routing (Land, Accept-Language, Gerät, OS), geplante Launch-Countdowns (starts_at), Ablauf-Fallbacks (307 oder HTTP 410 Gone), Fullscreen-Cloaking und SSRF-geschützte Metadaten-, Frame- und Health-Scanner.",
+        "Single-Owner-GitHub-OAuth via Better-Auth mit Fail-Closed-ALLOWED_GITHUB_ID-Hooks, ohne externe API-Schlüssel, mit scrypt + timingSafeEqual für PINs, HMAC-SHA256-Unlock-Cookies, atomarem SQLite-Rate-Limiting (5 Versuche / 60s) und 106 Vitest-Tests in 27 Suiten.",
+      ],
+      tradeoff:
+        "Die Beschränkung auf einen Einzelbetreiber sowie die vollständige Speicherung der Telemetrie in SQLite/Turso über after() und db.batch() eliminiert Multi-Tenant-Komplexität und externe Skripte, richtet das System jedoch gezielt auf persönliche Infrastruktur statt auf Multi-Tenant-SaaS-Vertrieb aus.",
+      lesson:
+        "Die Entkopplung der Weiterleitungsauflösung von der Telemetrie über nicht-blockierende after()-Hooks sowie Fail-Closed-Besitzprüfungen und SSRF-Schranken am Serverrand halten eine persönliche Link-Plattform schnell, prüfbar und robust.",
+    },
     "explora-bolivia": {
       problem:
         "Webanwendung zur Erkundung von Reisezielen in Bolivien mit übersichtlicher Präsentation und strukturierter Persistenz.",
@@ -323,6 +413,36 @@ export const caseStudiesByLang: Record<
         "Разделяйте создание сценариев, физический расчет и запись метрик на независимые этапы для обеспечения полной воспроизводимости экспериментов.",
     },
     fluenttube: fluenttubeByLang.ru.study,
+    "reservation-microsystem": {
+      problem:
+        "Сервисным компаниям с несколькими специалистами (клиникам, салонам, студиям) нужна модульная white-label платформа онлайн-записи и управления расписанием с проверкой слотов в реальном времени, разделением ролей (ADMIN и PROVIDER), атомарной защитой от конфликтов и надежными напоминаниями на маломощных серверах.",
+      architecture: [
+        "Next.js 16 App Router и React 19 реализуют 4-шаговый мастер записи клиентов (с сохранением черновика через OAuth, балансировкой автоназначения, цифровым QR-пропуском ISO/IEC 18004 SVG и экспортом в .ics/Google Calendar) и защищенный ролями портал /admin.",
+        "Модульный сервисный слой (booking-service, schedule-service, staff-service, reminder-service) поверх Prisma 6 и SQLite WAL с блокировками записи BEGIN IMMEDIATE и точной арифметикой часовых поясов IANA.",
+        "Серверная фильтрация SSE (/api/events) для изоляции персональных данных по ролям и нативный Web Push без внешних зависимостей (RFC 8292 VAPID ES256 и RFC 8291 aes128gcm на node:crypto) с персистентной очередью PushDelivery и автонапоминаниями за 24ч и 2ч.",
+        "Защищенные HMAC-SHA256 HttpOnly-сессии с отзывом через sessionVersion, CSRF-нонсы Google OAuth, SSRF-фильтры, rate limiting с учетом прокси, лимит активных записей и блокировка после 2 неявок.",
+        "Экономичный Docker-контейнер node:24-alpine (лимит 650m, привязка 127.0.0.1:3000) с ротацией превентивных бэкапов SQLite и автоматическим применением миграций prisma migrate deploy при старте.",
+      ],
+      tradeoff:
+        "Использование SQLite WAL с блокировками BEGIN IMMEDIATE и нативного Web Push без сторонних брокеров сохраняет инфраструктуру полностью автономной на ВМ с 1 ГБ ОЗУ, ограничивая параллельную запись одним узлом до переключения Prisma на PostgreSQL.",
+      lesson:
+        "Инварианты доступности, ролевая фильтрация SSE и идемпотентность отправки push-уведомлений (outbox по eventKey) должны обеспечиваться в транзакционных границах сервера, а не на стороне клиента.",
+    },
+    "inside-link": {
+      problem:
+        "Разработчики и авторы часто сталкиваются с перегруженными сторонними сервисами коротких ссылок с трекерами и подписками; InsideLink v2 предоставляет самостоятельный движок коротких ссылок для одного владельца, полиморфные микро-лендинги (HUB), каталог Bento и приватную аналитику 3.0 на собственном домене (links.cristianarando.dev).",
+      architecture: [
+        "Next.js 16 (src/proxy.ts + App Router + неблокирующая телеметрия в after()) и React 19 обслуживают публичный каталог Bento/Grid/List (/), резолвер слагов (/[slug]) и приватную панель /admin.",
+        "Turso (@libsql/client) и Drizzle ORM хранят site_settings, links, click_events и pin_attempts с O(1) курсорной пагинацией и аналитикой 3.0 в одном запросе db.batch(...) (тепловая карта за 90 дней, распределение по часам UTC, города, CTR блоков HUB и экспорт в CSV).",
+        "Полиморфные страницы Rich HUB (type = 'HUB') с 6 типами блоков (button, кэшируемый github-repo, click-to-play фасады youtube/spotify, code, callout), 6 темными пресетами, HEX-кастомизацией темы и генерацией брендированных QR-кодов SVG/PNG.",
+        "Умная условная маршрутизация (страна, Accept-Language, устройство, ОС), отложенный запуск с таймером (starts_at), перенаправление при истечении (307 или HTTP 410 Gone), полноэкранный cloaking и сканеры метаданных/фреймов/доступности с защитой от SSRF.",
+        "Однопользовательская аутентификация Better-Auth GitHub OAuth с fail-closed проверкой ALLOWED_GITHUB_ID в хуках БД, без внешних API-ключей, хеширование PIN через scrypt + timingSafeEqual, cookies HMAC-SHA256, атомарный rate limiting в SQLite (5 попыток / 60с) и 106 тестов Vitest в 27 наборах.",
+      ],
+      tradeoff:
+        "Привязка к одному владельцу и хранение всей телеметрии внутри SQLite/Turso через after() и db.batch() устраняет сложность мультитенантности и внешние трекеры, но делает платформу специализированной для личной инфраструктуры, а не для массового SaaS.",
+      lesson:
+        "Отделение логики редиректов от записи телеметрии через неблокирующие хуки after() в сочетании с fail-closed проверкой владельца и защитой от SSRF на сервере обеспечивает высокую скорость и надежность.",
+    },
     "explora-bolivia": {
       problem:
         "Туристический веб-сервис по достопримечательностям Боливии с каталогом маршрутов и структурированным хранением данных.",
@@ -410,6 +530,36 @@ export const caseStudiesByLang: Record<
         "シナリオ作成、数値積分、テレメトリ記録のパイプラインを疎結合に保ち、実験条件の決定性と再現性を完全に担保すること。",
     },
     fluenttube: fluenttubeByLang.ja.study,
+    "reservation-microsystem": {
+      problem:
+        "複数の専門スタッフが在籍するサービス業（クリニック、サロン、スタジオなど）では、リアルタイムの空き枠計算、役割ごとの厳格な権限分離（ADMIN / PROVIDER）、競合を防ぐ排他制御、そして省メモリな単一ノード環境でも確実に届くリマインダーを備えたホワイトラベル予約基盤が求められます。",
+      architecture: [
+        "Next.js 16 App RouterとReact 19による4ステップの顧客予約ウィザード（OAuth下書き復元、負荷分散自動割り当て、ISO/IEC 18004 SVG QRパス、.ics/Googleカレンダー出力）および役割保護された/adminポータル。",
+        "Prisma 6とSQLite WAL上で動作するモジュラーサービス層（booking-service、schedule-service、staff-service、reminder-service）をBEGIN IMMEDIATE書き込みロックとIANAタイムゾーン演算で保護。",
+        "役割横断のPII漏洩を防ぐサーバー側フィルタ付きSSE（/api/events）と、node:cryptoのみで実装したRFC 8292 VAPID ES256 / RFC 8291 aes128gcmネイティブWeb Push（永続PushDeliveryアウトボックスによる24時間前・2時間前自動通知）。",
+        "sessionVersion失効機能付きHMAC-SHA256 HttpOnlyセッション、Google OAuth CSRFノンス、SSRF防御、プロキシ対応レート制限、重複予約上限、および2回無断キャンセル時の自動ロック機能。",
+        "650mメモリ制限・127.0.0.1:3000バインドのnode:24-alpine Docker構成と、起動時のローテーションSQLiteバックアップおよびprisma migrate deploy自動復旧。",
+      ],
+      tradeoff:
+        "BEGIN IMMEDIATEロックを備えたSQLite WALと外部ブローカー不要のネイティブWeb Pushを採用することで1GB RAMのVMでも自己完結的かつ予測可能に動作しますが、高並列書き込みが必要な場合はPrismaの設定変更によるPostgreSQL移行を前提としています。",
+      lesson:
+        "予約枠の不変条件、役割別SSEフィルタリング、通知配信のべき等性（eventKeyアウトボックス）はクライアント側の状態更新に頼らず、サーバーのトランザクション境界内で強制すべきです。",
+    },
+    "inside-link": {
+      problem:
+        "クリエイターやエンジニア向けの外部短縮URLサービスは追跡ピクセルや課金制限が多くなりがちです。InsideLink v2は独自ドメイン（links.cristianarando.dev）上で動作する単一オーナー向けのセルフホスト短縮URLエンジン、ポリモーフィックHUBプラットフォーム、Bentoディレクトリ、ゼロPII分析基盤を提供します。",
+      architecture: [
+        "Next.js 16（src/proxy.ts、App Router、非同期after()テレメトリ）とReact 19により、公開ディレクトリ（Bento/Grid/List）、/[slug]リゾルバ、および非公開の/admin管理画面を構築。",
+        "Turso（@libsql/client）とDrizzle ORMでsite_settings、links、click_events、pin_attemptsを管理し、O(1)キーセットカーソルページネーションと単一ラウンドトリップのdb.batch(...)によるAnalytics 3.0（90日ヒートマップ、24時間UTC分布、都市別集計、HUBブロックCTR、CSV出力）を実現。",
+        "6種類のブロック（button、キャッシュ付きgithub-repo、クリック再生式youtube/spotifyファサード、code、callout）を備えたポリモーフィックRich HUB（type = 'HUB'）、6種のダークプリセット、HEXテーマ上書き、SVG/PNG QRコード生成に対応。",
+        "条件付きスマートルーティング（国、Accept-Language、デバイス、OS）、公開予約カウントダウン（starts_at）、期限切れフォールバック（307またはHTTP 410 Gone）、フルスクリーンクローキング、SSRF対策済みメタデータ・フレーム・ヘルススキャナを搭載。",
+        "Better-AuthのGitHub OAuthをALLOWED_GITHUB_IDのフェイルクローズDBフックで単一オーナーに固定し、外部APIキーを排除。scrypt + timingSafeEqualによるPIN検証、HMAC-SHA256解除クッキー、SQLite原子レート制限（60秒5回）を備え、27スイート106件のVitestテストで検証。",
+      ],
+      tradeoff:
+        "認証を単一オーナーに限定し、全テレメトリをafter()とdb.batch()経由でSQLite/Tursoに集約することでマルチテナントの複雑さや外部計測スクリプトを排除できる一方、個人インフラ専用設計となりマルチテナントSaaS販売には向かないトレードオフがあります。",
+      lesson:
+        "リダイレクト解決とテレメトリ記録を非同期after()フックで切り離し、サーバー境界でフェイルクローズの所有権検証とSSRF防御を徹底することで、高速で監査可能な個人向けリンク基盤を維持できます。",
+    },
     "explora-bolivia": {
       problem:
         "ボリビアの観光資源やおすすめルートを体系的に紹介し、探索体験を支えるWebプラットフォーム。",

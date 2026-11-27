@@ -18,6 +18,16 @@ export const projectCopy = {
       "PythonとFastAPIで構築された、HFV社会力モデルに基づく群衆力学・避難実験のための対話型研究スタジオ。",
   },
   fluenttube: { title: fluenttube.title, description: fluenttube.description },
+  "reservation-microsystem": {
+    title: "Reservas App - マルチスタッフ予約管理・オンラインブッキング基盤",
+    description:
+      "Next.js 16、TypeScript、Prisma、SSEリアルタイム同期、RFC 8292/8291ネイティブWeb Push、PWA、Dockerで構築したモジュラー型予約管理プラットフォーム。",
+  },
+  "inside-link": {
+    title: "InsideLink v2 - スマート短縮URL・プロジェクトHUB＆分析基盤",
+    description:
+      "Next.js 16、Turso、Drizzle ORM、Better-Authで構築したセルフホスト型短縮リンクエンジン、ポリモーフィックHUBページ、テーマスタジオ、ゼロPII分析プラットフォーム。",
+  },
   "explora-bolivia": {
     title: "Explora Bolivia - Travel Guide App",
     description:

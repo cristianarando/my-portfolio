@@ -18,6 +18,16 @@ export const projectCopy = {
       "Research studio for pedestrian dynamics, evacuation experiments, and Helbing-Farkas-Vicsek social force simulations built with Python and FastAPI.",
   },
   fluenttube: { title: fluenttube.title, description: fluenttube.description },
+  "reservation-microsystem": {
+    title: "Reservas App - Multi-Staff Appointment Scheduling Platform",
+    description:
+      "Modular white-label appointment scheduling and online booking platform built with Next.js 16, TypeScript, Prisma, SSE live sync, native RFC 8292/8291 Web Push, PWA, and Docker.",
+  },
+  "inside-link": {
+    title: "InsideLink v2 - Smart Shortlinks, Rich HUBs & Analytics",
+    description:
+      "Self-hosted, single-owner shortlink engine, polymorphic project micro-landing HUBs, theme studio, QR generator, and zero-PII Analytics 3.0 built with Next.js 16, Turso, Drizzle ORM, and Better-Auth.",
+  },
   "explora-bolivia": {
     title: "Explora Bolivia - Travel Guide App",
     description:

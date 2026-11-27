@@ -124,6 +124,16 @@ export const certifications: CertificationCategory[] = [
     name: "ソフトウェア基礎",
     items: [
       {
+        id: "udemy-software-architecture",
+        title: "Software Architecture & Design of Modern Large Scale Systems",
+        institution: "Udemy",
+        date: "2026年11月",
+        description:
+          "ソフトウェアアーキテクチャおよび大規模システム設計に関する8時間のコースを修了。スケーラビリティ、高可用性、分散アーキテクチャ、およびアーキテクチャ上の意思決定を習得。",
+        link: "https://drive.google.com/file/d/1R4SggqaN1L0zMBMuPr46O6CBSNmiE3d1/view",
+        logo: "/src/assets/images/certs/udemy.webp",
+      },
+      {
         id: "solid-clean-code",
         title: "SOLID Principles and Clean Code",
         institution: "DevTalles",

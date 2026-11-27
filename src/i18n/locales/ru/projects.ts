@@ -18,6 +18,16 @@ export const projectCopy = {
       "Исследовательская студия для моделирования динамики толпы и эвакуации на основе модели социальных сил HFV на Python и FastAPI.",
   },
   fluenttube: { title: fluenttube.title, description: fluenttube.description },
+  "reservation-microsystem": {
+    title: "Reservas App - Платформа записи и управления расписанием персонала",
+    description:
+      "Модульная white-label платформа онлайн-записи и управления расписанием на Next.js 16, TypeScript, Prisma, SSE, нативном RFC 8292/8291 Web Push, PWA и Docker.",
+  },
+  "inside-link": {
+    title: "InsideLink v2 - Умные короткие ссылки, HUB-страницы и аналитика",
+    description:
+      "Самостоятельно размещаемый движок коротких ссылок, полиморфных микро-лендингов (HUB), студия тем, QR-генератор и аналитика без PII на Next.js 16, Turso, Drizzle ORM и Better-Auth.",
+  },
   "explora-bolivia": {
     title: "Explora Bolivia - Travel Guide App",
     description:
